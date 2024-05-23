@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "TechLearn",
+    "slug": "tcc24",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/L.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/L.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.euc4u4.tcc24"
+    },
+    "web": {
+      "favicon": "./assets/L.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9d80ebdc-5c5e-4b77-bbbb-e22198a2e555"
+      }
+    }
+  }
+}
