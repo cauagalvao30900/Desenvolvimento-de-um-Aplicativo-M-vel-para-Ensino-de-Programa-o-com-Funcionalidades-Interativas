@@ -13,8 +13,8 @@ export default function Example() {
     emailNotifications: true,
     pushNotifications: false,
   });
-  const [nome, setNome] = useState('');
-  const [biografia, setBiografia] = useState('');
+  const [nome, setNome] = useState('Seu Nome');
+  const [biografia, setBiografia] = useState('Sua biografia...');
   const navigation = useNavigation();
 
   const saveUpdates = () => {
@@ -26,34 +26,13 @@ export default function Example() {
     console.log('Nova biografia:', biografia);
 
     // Aqui você enviaria os novos dados para o backend e atualizaria o perfil no banco de dados
-    // Exemplo de requisição ao backend para atualizar o perfil:
-    // fetch('https://seuservidor.com/atualizarperfil', {
-    //   method: 'PUT',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ nome, biografia }),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Perfil atualizado com sucesso:', data);
-    //   // Você pode adicionar aqui um feedback para o usuário indicando que as alterações foram salvas
-    // })
-    // .catch(error => {
-    //   console.error('Erro ao atualizar perfil:', error);
-    //   // Adicione aqui um feedback de erro para o usuário, caso ocorra algum problema ao salvar as alterações
-    // });
 
-    // Após salvar as alterações, você pode navegar de volta para a tela anterior ou para a tela do perfil
     navigation.goBack();
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.header}>
-        </View>
-
         <View style={styles.profile}>
           <View style={styles.profileHeader}>
             <Image
@@ -61,16 +40,26 @@ export default function Example() {
               style={styles.profileAvatar}
             />
             <View>
-              <Text style={styles.profileName}>{nome}</Text>
-              <Text style={styles.profileHandle}>{biografia}</Text>
+              <TextInput
+                style={styles.profileName}
+                value={nome}
+                onChangeText={setNome}
+                placeholder="Seu Nome"
+                placeholderTextColor="#a9a9a9"
+              />
+              <TextInput
+                style={styles.profileHandle}
+                value={biografia}
+                onChangeText={setBiografia}
+                placeholder="Sua biografia..."
+                placeholderTextColor="#a9a9a9"
+              />
             </View>
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate('EditarPerfil')}>
-            <View style={styles.profileAction}>
-              <Text style={styles.profileActionText}>Alterar Foto de Perfil</Text>
-              <FeatherIcon color="#fff" name="edit-3" size={16} />
-            </View>
+          <TouchableOpacity onPress={() => navigation.navigate('EditarPerfil')} style={styles.profileAction}>
+            <Text style={styles.profileActionText}>Alterar Foto de Perfil</Text>
+            <FeatherIcon color="#fff" name="edit-3" size={16} />
           </TouchableOpacity>
         </View>
 
@@ -114,7 +103,6 @@ export default function Example() {
             <View style={styles.section}>
               <View style={styles.sectionBody}>
                 <View style={[styles.rowWrapper, styles.rowFirst]}>
-
                 </View>
 
                 <View style={styles.rowWrapper}>
@@ -228,56 +216,36 @@ export default function Example() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   container: {
     paddingVertical: 24,
-    paddingHorizontal: 0,
+    paddingHorizontal: 16,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-  },
-  header: {
-    paddingLeft: 24,
-    paddingRight: 24,
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#ffffff',
-    marginBottom: 6,
-  },
-  subtitle: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#ffff',
-  },
-  tabs: {
-    flexDirection: 'row',
-    paddingTop: 16,
-    backgroundColor: '#fff',
   },
   profile: {
     paddingTop: 12,
     paddingHorizontal: 24,
     paddingBottom: 24,
     backgroundColor: '#fff',
-    borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#e3e3e3',
   },
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   profileAvatar: {
     width: 60,
     height: 60,
-    borderRadius: 9999,
+    borderRadius: 30,
     borderWidth: 1,
     borderColor: '#ccc',
     marginRight: 12,
-    left: 134,
   },
   profileName: {
     fontSize: 17,
@@ -289,21 +257,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#989898',
   },
-
+  profileAction: {
+    marginTop: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#007aff',
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   profileActionText: {
     marginRight: 8,
     fontSize: 15,
     fontWeight: '600',
     color: '#fff',
   },
-  tab: {
+  tabs: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
-    position: 'relative',
-    overflow: 'hidden',
+    paddingTop: 16,
+    backgroundColor: '#fff',
   },
   tabWrapper: {
     flexGrow: 1,
@@ -311,6 +284,12 @@ const styles = StyleSheet.create({
     flexBasis: 0,
     borderColor: '#e5e7eb',
     borderBottomWidth: 2,
+  },
+  tab: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
   },
   tabText: {
     fontSize: 13,
@@ -341,7 +320,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     height: 44,
     paddingRight: 24,
   },
@@ -359,13 +337,5 @@ const styles = StyleSheet.create({
   },
   rowSpacer: {
     flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  rowValue: {
-    fontSize: 17,
-    fontWeight: '500',
-    color: '#7f7f7f',
-    marginRight: 4,
   },
 });

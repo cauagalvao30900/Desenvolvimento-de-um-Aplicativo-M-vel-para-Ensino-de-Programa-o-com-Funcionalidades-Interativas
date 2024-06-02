@@ -7,7 +7,6 @@
  * @noflow
  */
 
-import getBoundingClientRect from '../../modules/getBoundingClientRect';
 import setValueForStyles from '../../modules/setValueForStyles';
 
 const getRect = (node) => {
@@ -83,7 +82,7 @@ const UIManager = {
   measureInWindow(node, callback) {
     if (node) {
       setTimeout(() => {
-        const { height, left, top, width } = getBoundingClientRect(node);
+        const { height, left, top, width } = getRect(node);
         callback(left, top, width, height);
       }, 0);
     }

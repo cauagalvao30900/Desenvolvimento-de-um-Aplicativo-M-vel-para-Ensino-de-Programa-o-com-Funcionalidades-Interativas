@@ -11,22 +11,8 @@ export default function Example() {
     <SafeAreaView style={styles.container}>
       <Image
         style={styles.background}
-        source={{
-          uri: 'https://cdn.discordapp.com/attachments/826597059355607040/1239014394407551106/logo.jpg?ex=66416193&is=66401013&hm=f3a2194ae34c26f2ab82803fdab54c1f2544b2f588bd4735c5c9664c349cc0b1&',
-        }}
-        resizeMode="cover"
-      />
-      <View style={[styles.background, styles.overlay]} />
-      <View style={styles.content}>
-        <Text style={styles.title}>Ola aqui abaixo,{'\n'}você pode</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Perfil'); // Navegação para a tela de perfil
-          }}
-          style={styles.button}>
-          <Text style={styles.buttonText}>Criar sua conta</Text>
-        </TouchableOpacity>
-      </View>
+        source={{ uri: 'https://cdn.discordapp.com/attachments/1134949806679281714/1246646628618862602/logo.jpg?ex=665d25a5&is=665bd425&hm=36c35353025876ec759d972ff7970cddb69967d8264dc4ddad4b22d80c50b3bc&' }}
+        />
     </SafeAreaView>
   );
 }
@@ -44,7 +30,7 @@ const styles = StyleSheet.create({
     height: height,
   },
   overlay: {
-  
+    // Adicione o estilo para a sobreposição, se necessário
   },
   content: {
     position: 'absolute',
@@ -73,3 +59,5 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
+//GITHUB TESTE

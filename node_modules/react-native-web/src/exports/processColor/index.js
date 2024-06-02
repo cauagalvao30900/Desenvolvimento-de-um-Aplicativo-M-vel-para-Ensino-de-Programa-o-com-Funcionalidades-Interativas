@@ -8,7 +8,7 @@
  * @flow
  */
 
-import normalizeColor from '@react-native/normalize-colors';
+import normalizeColor from '@react-native/normalize-color';
 
 const processColor = (color?: string | number): ?number => {
   if (color === undefined || color === null) {

@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/L.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.euc4u4.tcc24"
+      "package": "com.euc4u4.tcc24",
+      "versionCode": 1 
     },
     "web": {
       "favicon": "./assets/L.png"

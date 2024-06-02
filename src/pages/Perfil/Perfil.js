@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,17 +33,17 @@ export default function Example({ navigation }) {
           if (user.password === form.password) {
             navigation.navigate('Telaperfil');
           } else {
-            alert('Email ou senha incorretos. Por favor, tente novamente.');
+            Alert.alert('Erro', 'Email ou senha incorretos. Por favor, tente novamente.');
           }
         } else {
-          alert('Nenhum usuário registrado encontrado com este email. Por favor, crie uma conta primeiro.');
+          Alert.alert('Erro', 'Nenhum usuário registrado encontrado com este email. Por favor, crie uma conta primeiro.');
         }
       } catch (error) {
         console.error('Erro ao ler os dados do usuário:', error);
-        alert('Ocorreu um erro. Por favor, tente novamente.');
+        Alert.alert('Erro', 'Ocorreu um erro. Por favor, tente novamente.');
       }
     } else {
-      alert('Por favor, preencha todos os campos.');
+      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
     }
   };
 
@@ -56,11 +56,11 @@ export default function Example({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Olá!</Text>
-          <Text style={styles.subtitle}>Entre ou Cadastre sua Conta</Text>
+          <Text style={styles.title}>Bem-vindo de volta!</Text>
+          <Text style={styles.subtitle}>Entre com sua conta</Text>
         </View>
         <View style={styles.form}>
           <View style={styles.input}>
@@ -68,40 +68,34 @@ export default function Example({ navigation }) {
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
-              keyboardType="Email"
+              keyboardType="email-address"
               onChangeText={(email) => setForm({ ...form, email })}
               placeholder="Tech@example.com"
-              placeholderTextColor="#6b7280"
+              placeholderTextColor="#9ca3af"
               style={styles.inputControl}
               value={form.email}
             />
           </View>
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Senha</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.passwordContainer}>
               <TextInput
                 autoCorrect={false}
                 onChangeText={(password) => setForm({ ...form, password })}
                 placeholder="********"
-                placeholderTextColor="#6b7280"
+                placeholderTextColor="#9ca3af"
                 style={[styles.inputControl, { flex: 1 }]}
                 secureTextEntry={!form.showPassword}
                 value={form.password}
               />
-             
-              <TouchableOpacity 
-  onPress={togglePasswordVisibility}
-  style={{ marginLeft: -24 }} // Adicionando marginLeft para mover o ícone para a esquerda
->
+              <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
                 <FontAwesomeIcon icon={form.showPassword ? faEye : faEyeSlash} size={20} color="#6b7280" />
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.formAction}>
-            <TouchableOpacity onPress={handleLogin}>
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>Entrar</Text>
-              </View>
+            <TouchableOpacity onPress={handleLogin} style={styles.btn}>
+              <Text style={styles.btnText}>Entrar</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleSignUp}>
               <Text style={styles.linkText}>Cadastrar</Text>
@@ -119,9 +113,21 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   header: {
     marginVertical: 36,
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,
@@ -141,8 +147,6 @@ const styles = StyleSheet.create({
   },
   formAction: {
     marginVertical: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
   input: {
@@ -156,30 +160,32 @@ const styles = StyleSheet.create({
   },
   inputControl: {
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#f3f4f6',
     paddingHorizontal: 16,
     borderRadius: 12,
     fontSize: 15,
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
-    borderColor: '#C9D3DB',
-    borderStyle: 'solid',
+    borderColor: '#d1d5db',
   },
-  btn: {
+  passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
+  },
+  eyeIcon: {
+    marginLeft: -30,
+  },
+  btn: {
+    width: '100%',
+    borderRadius: 25,
+    paddingVertical: 12,
     backgroundColor: '#007aff',
-    borderColor: '#007aff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btnText: {
-    fontSize: 17,
-    lineHeight: 24,
+    fontSize: 18,
     fontWeight: '600',
     color: '#fff',
   },
@@ -188,5 +194,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#007aff',
     textDecorationLine: 'underline',
+    marginTop: 16,
   },
 });

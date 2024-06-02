@@ -65,31 +65,18 @@ function MainTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: {
-          backgroundColor: '#d3d3d3',
-          height: 66,
-          position: 'absolute',
-          bottom: 0,
-          left: 10,
-          right: 10,
-          borderRadius: 20, // Adiciona bordas arredondad
-        },
         tabBarActiveTintColor: 'black',
-        tabBarLabelStyle: {
-          marginTop: 20,
-        },
-        tabBarIconStyle: {
-          marginTop: 10, // Altere aqui para ajustar a distância vertical dos ícones em relação aos títulos
-        }
-      }}>
-
+        tabBarInactiveTintColor: 'white',
+        tabBarStyle: { backgroundColor: 'gray' }, // Mudar a cor de fundo da barra de abas para preto
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ size, color }) => (
-            <Entypo name="home" size={size} color="white" />
+            <Entypo name="home" size={size} color={color} />
           ),
           headerShown: false,
         }}
@@ -100,7 +87,7 @@ function MainTabNavigator() {
         options={{
           tabBarLabel: 'Documentos',
           tabBarIcon: ({ size, color }) => (
-            <Feather name="file-text" size={size} color="white" />
+            <Feather name="file-text" size={size} color={color} />
           ),
           headerShown: false,
         }}
@@ -122,7 +109,7 @@ function MainTabNavigator() {
         options={{
           tabBarLabel: 'Exercicios',
           tabBarIcon: ({ size, color }) => (
-            <Feather name="edit" size={size} color="white" />
+            <Feather name="edit" size={size} color={color} />
           ),
           headerShown: false,
         }}
@@ -133,7 +120,7 @@ function MainTabNavigator() {
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ size, color }) => (
-            <Feather name="user" size={size} color="white" />
+            <Feather name="user" size={size} color={color} />
           ),
           headerShown: false,
         }}
