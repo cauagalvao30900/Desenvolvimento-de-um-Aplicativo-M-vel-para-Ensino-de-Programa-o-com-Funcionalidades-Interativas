@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, View, ScrollView, TouchableOpacity, Text, Switch, Image, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, SafeAreaView, View, ScrollView, TouchableOpacity, Text, Switch, Image, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { auth, storage } from '../../../services/firebaseConfig'; // Verifique o caminho correto para o firebaseConfig
+import { onAuthStateChanged } from 'firebase/auth';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const tabs = [
-  { name: 'Configurações', icon: 'settings' },
+
 ];
 
 export default function Example() {
@@ -15,7 +19,53 @@ export default function Example() {
   });
   const [nome, setNome] = useState('Seu Nome');
   const [biografia, setBiografia] = useState('Sua biografia...');
+  const [profileImage, setProfileImage] = useState('https://static.vecteezy.com/ti/vetor-gratis/p3/11186876-simbolo-de-foto-de-perfil-masculino-vetor.jpg');
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setNome(user.email); // Definir o email do usuário como nome
+        // Você também pode buscar a URL da foto de perfil do usuário aqui, se estiver armazenada no banco de dados
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+  const handleImagePicker = () => {
+    launchImageLibrary({ mediaType: 'photo' }, async (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.assets && response.assets.length > 0) {
+        const source = { uri: response.assets[0].uri };
+        console.log('Image source: ', source);
+
+        // Faça o upload da imagem para o Firebase Storage
+        const uploadUri = response.assets[0].uri;
+        const user = auth.currentUser;
+        const storageRef = ref(storage, `profile_images/${user.uid}`);
+
+        try {
+          const responseFetch = await fetch(uploadUri);
+          const blob = await responseFetch.blob();
+
+          const snapshot = await uploadBytes(storageRef, blob);
+          console.log('Uploaded a blob or file!', snapshot);
+
+          const downloadURL = await getDownloadURL(snapshot.ref);
+          setProfileImage(downloadURL);
+          // Aqui, você pode atualizar o perfil do usuário no banco de dados com a nova URL da imagem
+        } catch (error) {
+          console.error('Upload failed', error);
+          Alert.alert('Erro', 'Falha ao enviar a imagem. Tente novamente mais tarde.');
+        }
+      }
+    });
+  };
 
   const saveUpdates = () => {
     // Aqui você implementará a lógica para salvar as atualizações no email cadastrado
@@ -35,10 +85,12 @@ export default function Example() {
       <View style={styles.container}>
         <View style={styles.profile}>
           <View style={styles.profileHeader}>
-            <Image
-              source={{ uri: 'https://static.vecteezy.com/ti/vetor-gratis/p3/11186876-simbolo-de-foto-de-perfil-masculino-vetor.jpg' }}
-              style={styles.profileAvatar}
-            />
+            <TouchableOpacity onPress={handleImagePicker}>
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.profileAvatar}
+              />
+            </TouchableOpacity>
             <View>
               <TextInput
                 style={styles.profileName}
@@ -57,10 +109,6 @@ export default function Example() {
             </View>
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate('EditarPerfil')} style={styles.profileAction}>
-            <Text style={styles.profileActionText}>Alterar Foto de Perfil</Text>
-            <FeatherIcon color="#fff" name="edit-3" size={16} />
-          </TouchableOpacity>
         </View>
 
         <View style={styles.tabs}>
@@ -191,6 +239,7 @@ export default function Example() {
                   </TouchableOpacity>
                 </View>
 
+               
                 <View style={styles.rowWrapper}>
                   <TouchableOpacity
                     onPress={() => {
@@ -245,97 +294,80 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 1,
     borderColor: '#ccc',
-    marginRight: 12,
+    marginRight: 16,
   },
   profileName: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#3d3d3d',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
   },
   profileHandle: {
-    marginTop: 4,
-    fontSize: 15,
-    color: '#989898',
+    fontSize: 14,
+    color: '#666',
   },
   profileAction: {
-    marginTop: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: '#007aff',
-    borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 8,
   },
   profileActionText: {
+    color: '#3182CE',
     marginRight: 8,
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#fff',
   },
   tabs: {
     flexDirection: 'row',
-    paddingTop: 16,
-    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#d1d5db',
+    marginBottom: 16,
   },
   tabWrapper: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    borderColor: '#e5e7eb',
-    borderBottomWidth: 2,
+    paddingBottom: 12,
+    marginRight: 24,
   },
   tab: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
+    paddingBottom: 8,
   },
   tabText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#6b7280',
-    marginLeft: 5,
+    fontSize: 16,
+    marginLeft: 4,
   },
   section: {
-    marginTop: 12,
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 12,
   },
   sectionBody: {
     backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: '#e3e3e3',
-    paddingLeft: 24,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 12,
   },
-  sectionTitle: {
-    marginTop: 0,
-    marginHorizontal: 24,
-    marginBottom: 8,
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#a7a7a7',
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
+  rowWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  rowFirst: {
+    marginTop: 12,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 44,
-    paddingRight: 24,
-  },
-  rowWrapper: {
-    borderTopWidth: 1,
-    borderColor: '#e3e3e3',
-  },
-  rowFirst: {
-    borderTopWidth: 0,
   },
   rowLabel: {
-    fontSize: 17,
-    fontWeight: '500',
-    color: '#2c2c2c',
+    flex: 1,
+    fontSize: 16,
   },
   rowSpacer: {
-    flexGrow: 1,
+    width: 8,
   },
 });
+

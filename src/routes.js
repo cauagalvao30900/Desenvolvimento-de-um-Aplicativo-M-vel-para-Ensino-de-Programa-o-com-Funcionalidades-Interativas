@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { View, ActivityIndicator, Image, StatusBar } from 'react-native';
 import Home from './pages/Home/Home';
 import New from './pages/New/New';
-import Perfil from './pages/Perfil/Perfil';
 import Aulas from './pages/Aulas/Aulas';
 import Search from './pages/PC bottleneck/PC bottleneck';
 import Rct from './pages/Rct/Rct';
@@ -55,6 +54,7 @@ import exhtml from '../src/pages/exreact/exhtml';
 import exphp from '../src/pages/exreact/exphp';
 import exreact from '../src/pages/exreact/exrct';
 import exsql from '../src/pages/exreact/exsql';
+import entrar from '../src/pages/acesso/entrar';
 
 
 
@@ -64,10 +64,11 @@ const Stack = createStackNavigator();
 function MainTabNavigator() {
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: 'black',
         tabBarInactiveTintColor: 'white',
-        tabBarStyle: { backgroundColor: 'gray' }, // Mudar a cor de fundo da barra de abas para preto
+        tabBarStyle: { backgroundColor: 'gray' },
       }}
     >
       <Tab.Screen
@@ -107,7 +108,7 @@ function MainTabNavigator() {
         name="Code"
         component={Code}
         options={{
-          tabBarLabel: 'Exercicios',
+          tabBarLabel: 'Exercícios',
           tabBarIcon: ({ size, color }) => (
             <Feather name="edit" size={size} color={color} />
           ),
@@ -116,7 +117,7 @@ function MainTabNavigator() {
       />
       <Tab.Screen
         name="Perfil"
-        component={Perfil}
+        component={Telaperfil}
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ size, color }) => (
@@ -151,7 +152,7 @@ export default function Routes() {
 
   return (
     <>
-      <StatusBar backgroundColor="#000000s" barStyle="light-content" />
+      <StatusBar backgroundColor="white" barStyle="light-content" />
       <Stack.Navigator>
         <Stack.Screen
           name="MainTabs"
@@ -395,16 +396,13 @@ export default function Routes() {
           component={exphp}
           options={{ headerShown: false }}
         />
+
+<Stack.Screen
+          name="entrar"
+          component={entrar}
+          options={{ headerShown: false }}
+        />
         
-        
-        
-
-
-
-
-
-
-
         <Stack.Screen
           name="Telaperfil"
           component={Telaperfil}

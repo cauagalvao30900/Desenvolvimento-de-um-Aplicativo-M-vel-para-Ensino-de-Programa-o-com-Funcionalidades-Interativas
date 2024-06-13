@@ -11,7 +11,7 @@ export default function Example() {
     <SafeAreaView style={styles.container}>
       <Image
         style={styles.background}
-        source={{ uri: 'https://cdn.discordapp.com/attachments/1134949806679281714/1246646628618862602/logo.jpg?ex=665d25a5&is=665bd425&hm=36c35353025876ec759d972ff7970cddb69967d8264dc4ddad4b22d80c50b3bc&' }}
+        source={{ uri: 'https://cdn.discordapp.com/attachments/1134949806679281714/1246646628618862602/logo.jpg?ex=665fc8a5&is=665e7725&hm=92e50441ad76ac9e843bba51f6a41ac557a6c28d2c3b84ee81d9750a9899a2fa&' }}
         />
     </SafeAreaView>
   );
@@ -30,20 +30,20 @@ const styles = StyleSheet.create({
     height: height,
   },
   overlay: {
-    // Adicione o estilo para a sobreposição, se necessário
+    
   },
   content: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
     paddingHorizontal: 24,
-    paddingBottom: 85, // Adicionando espaço entre o botão e a borda inferior
+    paddingBottom: 85, 
     alignItems: 'center',
   },
   title: {
     fontSize: 32,
     color: '#fff',
-    marginBottom: 12, // Adicionando margem inferior ao texto
+    marginBottom: 12, 
     textAlign: 'center',
   },
   button: {

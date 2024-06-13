@@ -11,27 +11,27 @@ const SECTION_BORDER_RADIUS = 60;
 const lessons = [
   {
     name: 'Aula 1',
-    duration: 22,
+  
     screen: 'sql1',
   },
   {
     name: 'Aula 2',
-    duration: 12,
+  
     screen: 'sql2',
   },
   {
     name: 'Aula 3',
-    duration: 37,
+ 
     screen: 'sql3',
   },
   {
     name: 'Aula 4',
-    duration: 12,
+   
     screen: 'sql4',
   },
   {
     name: 'Aula 5',
-    duration: 23,
+  
     screen: 'sql5',
   },
 ];

@@ -7,7 +7,7 @@
     "icon": "./assets/L.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/L.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,7 +23,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.euc4u4.tcc24",
-      "versionCode": 1 
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET"
+      ]
     },
     "web": {
       "favicon": "./assets/L.png"

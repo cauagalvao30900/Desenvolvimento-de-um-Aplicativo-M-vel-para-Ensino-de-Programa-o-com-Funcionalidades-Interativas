@@ -1,107 +1,69 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import firebase from 'firebase/app';
+import { firestore } from '../../../services/firebaseConfig'; // Ajuste o caminho conforme necessário
 
-export default function ReportErrorScreen({ navigation }) {
-  const [errorDescription, setErrorDescription] = useState('');
-  const [email, setEmail] = useState('');
-  const [reported, setReported] = useState(false);
+const ReportError = ({ navigation }) => {
+  const [description, setDescription] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = () => {
-    console.log('Erro relatado:', errorDescription);
-    console.log('E-mail do usuário:', email);
-    setReported(true);
-    // Redirecionar de volta para a tela do perfil após relatar o erro
-    navigation.navigate('Perfil');
+  const handleSubmit = async () => {
+    if (description.trim() === '') {
+      setErrorMessage('Por favor, insira a descrição do erro.');
+      return;
+    }
+
+    try {
+      await firestore.collection('errorReports').add({
+        description,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      setDescription('');
+      setErrorMessage('');
+      Alert.alert('Sucesso', 'Relatório enviado com sucesso!', [{ text: 'OK', onPress: () => navigation.goBack() }]);
+    } catch (error) {
+      setErrorMessage('Erro ao enviar o relatório. Tente novamente.');
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Relatar Erro</Text>
-      </View>
-      {!reported ? (
-        <View style={styles.form}>
-          <Text style={styles.label}>Descreva o erro:</Text>
-          <TextInput
-            style={styles.input}
-            multiline
-            value={errorDescription}
-            onChangeText={setErrorDescription}
-          />
-          <Text style={styles.label}>Seu e-mail (opcional):</Text>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Digite seu e-mail"
-          />
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Enviar</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.reportedMessage}>
-          <Text style={styles.reportedText}>O erro foi relatado com sucesso! Agradecemos pelo feedback.</Text>
-        </View>
-      )}
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.label}>Descreva o erro:</Text>
+      <TextInput
+        style={styles.input}
+        value={description}
+        onChangeText={setDescription}
+        placeholder="Descreva o problema aqui..."
+        multiline
+      />
+      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+      <Button title="Enviar" onPress={handleSubmit} />
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-  },
-  header: {
-    backgroundColor: '#007bff',
-    paddingVertical: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius:'30', 
-  },
-  title: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  form: {
-    paddingHorizontal: 20,
-    paddingTop: 40,
+    padding: 20,
+    backgroundColor: '#fff',
   },
   label: {
     fontSize: 18,
     marginBottom: 10,
-    fontWeight: 'bold',
   },
   input: {
-    height: 50,
-    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    borderColor: '#ccc',
+    padding: 10,
     fontSize: 16,
+    marginBottom: 20,
+    borderRadius: 5,
   },
-  button: {
-    backgroundColor: '#007bff',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  reportedMessage: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  reportedText: {
-    fontSize: 18,
-    textAlign: 'center',
+  error: {
+    color: 'red',
+    marginBottom: 10,
   },
 });
+
+export default ReportError;

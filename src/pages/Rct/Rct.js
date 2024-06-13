@@ -11,27 +11,26 @@ const SECTION_BORDER_RADIUS = 60;
 const lessons = [
   {
     name: 'Aula 1',
-    duration: 22,
+   
     screen: 'RstBasic',
   },
   {
     name: 'Aula 2',
-    duration: 12,
+   
     screen: 'Aula2',
   },
   {
     name: 'Aula 3',
-    duration: 37,
+   
     screen: 'aula3',
   },
   {
     name: 'Aula 4',
-    duration: 12,
+ 
     screen: 'aula4',
   },
   {
     name: 'Aula 5',
-    duration: 23,
     screen: 'aula5',
   },
 ];
@@ -119,7 +118,6 @@ export default function Example({ navigation }) {
                 <Text style={styles.cardIcon}>0{index + 1}</Text>
                 <View style={styles.lessonDetails}>
                   <Text style={styles.cardTitle}>{name}</Text>
-                  <Text style={styles.cardDuration}>{duration} minutes</Text>
                 </View>
                 <View style={styles.cardAction}>
                   <FeatherIcon color="#fff" name="book-open" size={20} />
@@ -150,7 +148,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginTop: SECTION_TOP_OFFSET,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'white',
     borderTopLeftRadius: SECTION_BORDER_RADIUS,
     borderTopRightRadius: SECTION_BORDER_RADIUS,
     paddingVertical: 32,

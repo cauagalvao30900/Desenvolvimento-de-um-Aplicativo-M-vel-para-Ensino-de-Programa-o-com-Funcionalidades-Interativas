@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Feather } from '@expo/vector-icons'; // Importando o ícone de seta
+import { Feather } from '@expo/vector-icons';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../services/firebaseConfig'; // Certifique-se de que o caminho para o seu arquivo firebaseConfig.js esteja correto
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 export default function SignUp({ navigation }) {
   const [form, setForm] = useState({
@@ -10,47 +13,37 @@ export default function SignUp({ navigation }) {
   });
 
   const handleSignUp = async () => {
-    // Verifica se os campos de e-mail e senha estão preenchidos
     if (form.email && form.password) {
+      if (form.password.length < 6) {
+        Alert.alert('Erro ao criar a conta', 'A senha deve ter pelo menos 6 caracteres.');
+        return;
+      }
+
       try {
-        // Verifica se já existe um usuário cadastrado com o mesmo e-mail
-        const existingUser = await AsyncStorage.getItem(form.email);
-  
-        // Se já existir um usuário com o mesmo e-mail, exibe uma mensagem de erro
-        if (existingUser) {
-          alert('Este e-mail já está sendo usado por outro usuário. Por favor, escolha outro e-mail.');
-          return;
-        }
-  
-        // Cria um novo objeto de usuário com os dados fornecidos
-        const newUser = {
-          email: form.email,
-          password: form.password,
-        };
-  
-        // Armazena as informações do novo usuário no AsyncStorage
-        await AsyncStorage.setItem(form.email, JSON.stringify(newUser));
-  
-        // Mostra um alerta informando que o cadastro foi realizado com sucesso
+        // Criação do usuário no Firebase
+        const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
         Alert.alert('Cadastro realizado', 'Sua conta foi criada com sucesso!');
-  
-        // Redireciona para a tela de login após o cadastro bem-sucedido
         navigation.navigate('Perfil');
       } catch (error) {
-        // Se ocorrer um erro durante o processo de cadastro, exibe uma mensagem de erro
         console.error('Erro ao criar a conta:', error);
-        alert('Ocorreu um erro ao criar a conta. Por favor, tente novamente.');
+        if (error.code === 'auth/weak-password') {
+          Alert.alert('Erro ao criar a conta', 'A senha deve ter pelo menos 6 caracteres.');
+        } else {
+          Alert.alert('Erro ao criar a conta', error.message);
+        }
       }
     } else {
-      // Se algum dos campos estiver vazio, exibe um alerta solicitando que o usuário preencha todos os campos.
-      alert('Por favor, preencha todos os campos.');
+      Alert.alert('Por favor, preencha todos os campos.');
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setForm({ ...form, showPassword: !form.showPassword });
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <View style={styles.container}>
-        {/* Botão para voltar à página anterior */}
         <View style={styles.goBackContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={24} color="#075eec" />
@@ -67,7 +60,7 @@ export default function SignUp({ navigation }) {
             }} />
 
           <Text style={styles.title}>
-          Tela <Text style={{ color: '#53ecec' }}> de cadastro</Text>
+            Tela <Text style={{ color: '#53ecec' }}> de cadastro</Text>
           </Text>
 
           <Text style={styles.subtitle}>
@@ -93,14 +86,19 @@ export default function SignUp({ navigation }) {
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Senha</Text>
 
-            <TextInput
-              autoCorrect={false}
-              onChangeText={(password) => setForm({ ...form, password })}
-              placeholder="********"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              secureTextEntry={true}
-              value={form.password} />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                autoCorrect={false}
+                onChangeText={(password) => setForm({ ...form, password })}
+                placeholder="********"
+                placeholderTextColor="#6b7280"
+                style={[styles.inputControl, { flex: 1 }]}
+                secureTextEntry={true}
+                value={form.password} />
+              <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
+                <FontAwesomeIcon icon={form.showPassword ? faEye : faEyeSlash} size={20} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.formAction}>
@@ -184,6 +182,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#C9D3DB',
     borderStyle: 'solid',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyeIcon: {
+    marginLeft: -30,
   },
   /** Button */
   btn: {
