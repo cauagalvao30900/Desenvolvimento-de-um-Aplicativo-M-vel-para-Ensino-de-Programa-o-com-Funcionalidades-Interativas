@@ -1,48 +1,83 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Button, ScrollView } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
 function App() {
+  const navigation = useNavigation();
+
   const exercises = [
     {
       id: 1,
       title: "Exercício 1",
-      question: "Crie um componente de função em React chamado 'HelloWorld' que renderiza a mensagem 'Hello, world!'",
-      answer: "<Text>Hello, world!</Text>"
+      question: "Qual método é usado para criar componentes de classe em React?",
+      options: [
+        "a) createComponent()",
+        "b) renderComponent()",
+        "c) Component()",
+        "d) class Component extends React.Component"
+      ],
+      correctAnswer: "d"
     },
     {
       id: 2,
       title: "Exercício 2",
-      question: "Converta a seguinte classe em um componente de função em React:\n\n```jsx\nimport React from 'react';\n\nclass Counter extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      count: 0\n    };\n  }\n\n  render() {\n    return (\n      <div>\n        <p>Count: {this.state.count}</p>\n        <button onClick={() => this.setState({ count: this.state.count + 1 })}>Increment</button>\n      </div>\n    );\n  }\n}\n```",
-      answer: "<Text>function Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <View>\n      <Text>Count: {count}</Text>\n      <Button title='Increment' onPress={() => setCount(count + 1)} />\n    </View>\n  );\n}</Text>"
+      question: "Qual hook é usado para gerenciar o estado em componentes de função?",
+      options: [
+        "a) useState",
+        "b) useEffect",
+        "c) useContext",
+        "d) useReducer"
+      ],
+      correctAnswer: "a"
     },
     {
       id: 3,
       title: "Exercício 3",
-      question: "Terceira pergunta...",
-      answer: "<Text>Resposta da terceira pergunta</Text>"
+      question: "Qual diretiva JSX é usada para renderizar listas de elementos?",
+      options: [
+        "a) for",
+        "b) while",
+        "c) map",
+        "d) each"
+      ],
+      correctAnswer: "c"
     },
     {
       id: 4,
       title: "Exercício 4",
-      question: "Quarta pergunta...",
-      answer: "<Text>Resposta da quarta pergunta</Text>"
+      question: "Qual é a finalidade do hook useEffect?",
+      options: [
+        "a) Executar código assíncrono",
+        "b) Gerenciar estado local",
+        "c) Acessar o contexto do aplicativo",
+        "d) Realizar efeitos colaterais em componentes de função"
+      ],
+      correctAnswer: "d"
     },
     {
       id: 5,
       title: "Exercício 5",
-      question: "Quinta pergunta...",
-      answer: "<Text>Resposta da quinta pergunta</Text>"
+      question: "Como você aplica um estilo condicional em um componente JSX?",
+      options: [
+        "a) style={this.style ? 'condicional' : 'default'}",
+        "b) style={{condition ? 'condicional' : 'default'}}",
+        "c) style={{condition && 'condicional'}}",
+        "d) style={condition ? styles.condicional : styles.default}"
+      ],
+      correctAnswer: "d"
     }
   ];
 
-  const [userAnswer, setUserAnswer] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState('');
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
+  const [showCongrats, setShowCongrats] = useState(false);
 
   const checkAnswer = () => {
-    const correctAnswer = exercises[currentExerciseIndex].answer.trim();
-    if (userAnswer.trim() === correctAnswer) {
+    const correctAnswer = exercises[currentExerciseIndex].correctAnswer;
+    if (selectedAnswer === correctAnswer) {
       setFeedback('Resposta correta!');
       setIsCorrect(true);
     } else {
@@ -52,44 +87,243 @@ function App() {
   };
 
   const nextExercise = () => {
-    setFeedback('');
-    setUserAnswer('');
-    setIsCorrect(false);
-    setCurrentExerciseIndex(currentExerciseIndex + 1);
+    if (isCorrect) {
+      if (currentExerciseIndex === exercises.length - 1) {
+        setShowCongrats(true);
+      } else {
+        setFeedback('');
+        setSelectedAnswer('');
+        setIsCorrect(false);
+        setCurrentExerciseIndex(currentExerciseIndex + 1);
+      }
+    }
   };
 
   const resetExercises = () => {
     setCurrentExerciseIndex(0);
     setFeedback('');
-    setUserAnswer('');
+    setSelectedAnswer('');
     setIsCorrect(false);
+    setShowCongrats(false);
   };
 
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', marginTop: 40 }}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>Exercícios de React</Text>
-      <ScrollView style={{ width: '80%' }}>
-        {exercises.map((exercise, index) => (
-          <View key={index} style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 5, marginBottom: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', padding: 10 }}>{exercise.title}</Text>
-            <View style={{ backgroundColor: '#f0f0f0', padding: 20, borderRadius: 5 }}>
-              <Text style={{ fontSize: 18 }}>{exercise.question}</Text>
-              <TextInput
-                style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, marginTop: 10, marginBottom: 20 }}
-                value={userAnswer}
-                onChangeText={setUserAnswer}
-                placeholder="Digite sua resposta aqui..."
-              />
-              <Button title="Verificar Resposta" onPress={checkAnswer} />
-              {feedback !== '' && <Text style={{ color: isCorrect ? 'green' : 'red', marginTop: 10 }}>{feedback}</Text>}
-            </View>
+  const navigateToHome = () => {
+    navigation.navigate('Code');
+  };
+
+  const navigateToCode = () => {
+    navigation.navigate('Code');
+  };
+
+  if (showCongrats) {
+    return (
+      <View style={styles.congratsContainer}>
+        <TouchableOpacity onPress={navigateToCode} style={styles.backButton}>
+          <View style={styles.circle}>
+            <Icon name="arrow-back" size={30} color="#fff" />
           </View>
-        ))}
+        </TouchableOpacity>
+        <Text style={styles.congratsText}>Parabéns! Você concluiu todos os exercícios!</Text>
+        <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
+          <Text style={styles.homeButtonText}>Voltar para Home</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={navigateToCode} style={styles.backButton}>
+        <View style={styles.circle}>
+          <Icon name="arrow-back" size={30} color="#fff" />
+        </View>
+      </TouchableOpacity>
+      <Text style={styles.header}>Exercícios de React</Text>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+        <View key={exercises[currentExerciseIndex].id} style={styles.exerciseContainer}>
+          <Text style={styles.exerciseTitle}>{exercises[currentExerciseIndex].title}</Text>
+          <View style={styles.questionContainer}>
+            <Text style={styles.questionText}>{exercises[currentExerciseIndex].question}</Text>
+            {exercises[currentExerciseIndex].options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.optionButton,
+                  selectedAnswer === option.charAt(0) && styles.selectedOption
+                ]}
+                onPress={() => setSelectedAnswer(option.charAt(0))}
+              >
+                <Text style={styles.optionText}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.checkButton} onPress={checkAnswer}>
+              <Text style={styles.checkButtonText}>Verificar Resposta</Text>
+            </TouchableOpacity>
+            {feedback !== '' && <Text style={isCorrect ? styles.correctFeedback : styles.incorrectFeedback}>{feedback}</Text>}
+            <TouchableOpacity
+              style={[styles.nextButton, !isCorrect && { backgroundColor: '#ccc' }]}
+              onPress={nextExercise}
+              disabled={!isCorrect}
+            >
+              <Text style={styles.nextButtonText}>Próximo Exercício</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
-      <Button title="Próximo Exercício" onPress={nextExercise} disabled={feedback === '' || currentExerciseIndex === exercises.length - 1} />
-      {currentExerciseIndex === exercises.length && <Button title="Reiniciar Exercícios" onPress={resetExercises} />}
+      {currentExerciseIndex === exercises.length - 1 && (
+        <TouchableOpacity style={styles.resetButton} onPress={resetExercises}>
+          <Text style={styles.resetButtonText}>Reiniciar Exercícios</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#545454',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+  },
+  congratsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+  },
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#007bff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#FFF',
+  },
+  scrollContainer: {
+    width: '100%',
+  },
+  scrollContent: {
+    alignItems: 'center',
+  },
+  exerciseContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 20,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 20,
+    backgroundColor: '#363636',
+  },
+  exerciseTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#FFF',
+  },
+  questionContainer: {
+    backgroundColor: '#454545',
+    padding: 20,
+    borderRadius: 5,
+    width: '100%',
+  },
+  questionText: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: '#FFF',
+  },
+  optionButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#00ffff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  selectedOption: {
+    backgroundColor: '#2b961f',
+  },
+  optionText: {
+    fontSize: 16,
+    color: '#FFF',
+  },
+  checkButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#28a745',
+    alignItems: 'center',
+    width: '100%',
+  },
+  checkButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  correctFeedback: {
+    color: 'green',
+    marginTop: 10,
+    fontSize: 16,
+  },
+  incorrectFeedback: {
+    color: 'red',
+    marginTop: 10,
+    fontSize: 16,
+  },
+  nextButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#007bff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  nextButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  resetButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#00ffff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  resetButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  homeButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#00ffff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  homeButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+});
 
 export default App;

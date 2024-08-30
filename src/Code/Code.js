@@ -2,7 +2,6 @@ import React from 'react';
 import {
   StyleSheet,
   SafeAreaView,
-  Image,
   View,
   Text,
   Dimensions,
@@ -17,47 +16,39 @@ const items = [
     icon: 'code',
     title: 'React JS',
     subtitle: 'React Native',
-    route: 'exreact', // Adicionando a rota para a página ReactJS
+    route: 'exreact',
   },
   {
     icon: 'code',
     title: 'PHP',
     subtitle: 'back end',
-    route: 'exphp', // Adicionando a rota para a página PHP
+    route: 'exphp',
   },
   {
     icon: 'database',
     title: 'SQL',
     subtitle: 'database',
-    route: 'exsql', // Adicionando a rota para a página SQL
+    route: 'exsql',
   },
   {
     icon: 'codepen',
     title: 'HTML',
     subtitle: 'Front End',
-    route: 'exhtml', // Adicionando a rota para a página HTML
+    route: 'exhtml',
   },
 ];
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export default function Example() {
   const [value, setValue] = React.useState(0);
-  const navigation = useNavigation(); // Importando a função de navegação
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        style={styles.background}
-        source={{
-          uri: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dmlzdWFsJTIwc3R1ZGlvJTIwY29kZXxlbnwwfHwwfHx8MA%3D%3D',
-        }}
-        resizeMode="cover"
-      />
-      <View style={[styles.background, styles.overflow]} />
       <View style={styles.content}>
         <Text style={styles.title}>
-        exercícios de programação na sua linguagem favorita.
+          Escolha a linguagem para seus exercícios de programação:
         </Text>
         {items.map(({ icon, title, subtitle, route }, index) => {
           const isActive = value === index;
@@ -74,7 +65,6 @@ export default function Example() {
 
                 <View>
                   <Text style={styles.radioTitle}>{title}</Text>
-
                   <Text style={styles.radioSubtitle}>{subtitle}</Text>
                 </View>
 
@@ -86,7 +76,8 @@ export default function Example() {
                   <FontAwesome
                     color="#fff"
                     name="check"
-                    size={12} />
+                    size={12}
+                  />
                 </View>
               </View>
             </TouchableOpacity>
@@ -96,7 +87,6 @@ export default function Example() {
         <View style={styles.footer}>
           <TouchableOpacity
             onPress={() => {
-              // Navegar para a página da opção selecionada
               navigation.navigate(items[value].route);
             }}>
             <View style={styles.btn}>
@@ -114,34 +104,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1b1d1b',
-  },
-  background: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: width,
-    height: height,
-  },
-  overflow: {
-    backgroundColor: 'rgba(0,0,0,0.45)',
+    backgroundColor: '#545454',
   },
   content: {
     alignItems: 'center',
     paddingHorizontal: 14,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
-    color: '#fff',
+    color: '#ffffff',
     marginBottom: 22,
-    paddingRight: 40,
-
+    textAlign: 'center',
   },
   footer: {
     paddingVertical: 16,
   },
-  /** Radio */
   radio: {
     position: 'relative',
     paddingVertical: 8,
@@ -151,15 +129,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    backgroundColor: '#363636',
+    width: width - 30,
   },
   radioActive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.13)',
+    backgroundColor: '#363636',
   },
   radioIcon: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: '#000',
+    backgroundColor: 'black',
     marginRight: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -167,13 +147,13 @@ const styles = StyleSheet.create({
   radioTitle: {
     fontSize: 15,
     fontWeight: '700',
-    color: 'white',
+    color: '#ffffff',
     marginBottom: 2,
   },
   radioSubtitle: {
     fontSize: 14,
     fontWeight: '400',
-    color: '#878787',
+    color: '#666',
   },
   radioCheck: {
     width: 24,
@@ -181,14 +161,13 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ffff',
     marginLeft: 'auto',
     display: 'none',
   },
   radioCheckActive: {
     display: 'flex',
   },
-  /** Button */
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -197,13 +176,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderWidth: 1,
-    backgroundColor: '#007aff',
-    borderColor: '#007aff',
+    backgroundColor: '#00ffff',
+    borderColor: '#00ffff',
   },
   btnText: {
     fontSize: 17,
     lineHeight: 24,
     fontWeight: '600',
-    color: '#fff',
+    color: '#363636',
   },
 });

@@ -1,48 +1,83 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Button, ScrollView } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
 function App() {
-  const htmlExercises = [
+  const navigation = useNavigation();
+
+  const exercises = [
     {
       id: 1,
       title: "Exercício 1",
-      question: "Crie um elemento HTML para exibir um parágrafo com o texto 'Olá, mundo!'.",
-      answer: "<p>Olá, mundo!</p>"
+      question: "Qual tag é usada para definir um parágrafo em HTML?",
+      options: [
+        "a) <p>",
+        "b) <para>",
+        "c) <paragraph>",
+        "d) <text>"
+      ],
+      correctAnswer: "a"
     },
     {
       id: 2,
       title: "Exercício 2",
-      question: "Crie um elemento HTML para exibir uma lista ordenada com três itens: 'Item 1', 'Item 2' e 'Item 3'.",
-      answer: "<ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol>"
+      question: "Como você cria um link em HTML?",
+      options: [
+        "a) <a href='URL'>Texto</a>",
+        "b) <link href='URL'>Texto</link>",
+        "c) <url href='URL'>Texto</url>",
+        "d) <hyperlink href='URL'>Texto</hyperlink>"
+      ],
+      correctAnswer: "a"
     },
     {
       id: 3,
       title: "Exercício 3",
-      question: "Crie um elemento HTML para exibir uma lista não ordenada com três itens: 'Item A', 'Item B' e 'Item C'.",
-      answer: "<ul><li>Item A</li><li>Item B</li><li>Item C</li></ul>"
+      question: "Qual tag é usada para incluir uma imagem em HTML?",
+      options: [
+        "a) <img src='URL' />",
+        "b) <image src='URL' />",
+        "c) <picture src='URL' />",
+        "d) <src='URL' />"
+      ],
+      correctAnswer: "a"
     },
     {
       id: 4,
       title: "Exercício 4",
-      question: "Crie um elemento HTML para exibir uma tabela com duas linhas e duas colunas. Na primeira linha, insira 'Nome' e 'Idade' como cabeçalhos da tabela. Na segunda linha, insira 'João' e '30' como dados da tabela.",
-      answer: "<table><tr><th>Nome</th><th>Idade</th></tr><tr><td>João</td><td>30</td></tr></table>"
+      question: "Qual tag é usada para criar uma lista ordenada em HTML?",
+      options: [
+        "a) <ol>",
+        "b) <ul>",
+        "c) <list>",
+        "d) <dl>"
+      ],
+      correctAnswer: "a"
     },
     {
       id: 5,
       title: "Exercício 5",
-      question: "Crie um elemento HTML para exibir um formulário com um campo de entrada de texto com a etiqueta 'Nome' e um botão de envio.",
-      answer: "<form><label for='name'>Nome:</label><input type='text' id='name' name='name'><button type='submit'>Enviar</button></form>"
+      question: "Como você define um título de nível 1 em HTML?",
+      options: [
+        "a) <h1>",
+        "b) <title>",
+        "c) <header>",
+        "d) <head>"
+      ],
+      correctAnswer: "a"
     }
   ];
 
-  const [userAnswer, setUserAnswer] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState('');
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
+  const [showCongrats, setShowCongrats] = useState(false);
 
   const checkAnswer = () => {
-    const correctAnswer = htmlExercises[currentExerciseIndex].answer.trim();
-    if (userAnswer.trim() === correctAnswer) {
+    const correctAnswer = exercises[currentExerciseIndex].correctAnswer;
+    if (selectedAnswer === correctAnswer) {
       setFeedback('Resposta correta!');
       setIsCorrect(true);
     } else {
@@ -52,44 +87,239 @@ function App() {
   };
 
   const nextExercise = () => {
-    setFeedback('');
-    setUserAnswer('');
-    setIsCorrect(false);
-    setCurrentExerciseIndex(currentExerciseIndex + 1);
+    if (isCorrect) {
+      if (currentExerciseIndex === exercises.length - 1) {
+        setShowCongrats(true);
+      } else {
+        setFeedback('');
+        setSelectedAnswer('');
+        setIsCorrect(false);
+        setCurrentExerciseIndex(currentExerciseIndex + 1);
+      }
+    }
   };
 
   const resetExercises = () => {
     setCurrentExerciseIndex(0);
     setFeedback('');
-    setUserAnswer('');
+    setSelectedAnswer('');
     setIsCorrect(false);
+    setShowCongrats(false);
   };
 
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', marginTop: 40 }}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>Exercícios de HTML</Text>
-      <ScrollView style={{ width: '80%' }}>
-        {htmlExercises.map((exercise, index) => (
-          <View key={index} style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 5, marginBottom: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', padding: 10 }}>{exercise.title}</Text>
-            <View style={{ backgroundColor: '#f0f0f0', padding: 20, borderRadius: 5 }}>
-              <Text style={{ fontSize: 18 }}>{exercise.question}</Text>
-              <TextInput
-                style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, marginTop: 10, marginBottom: 20 }}
-                value={userAnswer}
-                onChangeText={setUserAnswer}
-                placeholder="Digite sua resposta aqui..."
-              />
-              <Button title="Verificar Resposta" onPress={checkAnswer} />
-              {feedback !== '' && <Text style={{ color: isCorrect ? 'green' : 'red', marginTop: 10 }}>{feedback}</Text>}
-            </View>
+  const navigateToHome = () => {
+    navigation.navigate('Code');
+  };
+
+  const navigateToCode = () => {
+    navigation.navigate('Code');
+  };
+
+  if (showCongrats) {
+    return (
+      <View style={styles.congratsContainer}>
+        <TouchableOpacity onPress={navigateToCode} style={styles.backButton}>
+          <View style={styles.circle}>
+            <Icon name="arrow-back" size={30} color="#fff" />
           </View>
-        ))}
+        </TouchableOpacity>
+        <Text style={styles.congratsText}>Parabéns! Você concluiu todos os exercícios!</Text>
+        <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
+          <Text style={styles.homeButtonText}>Voltar para Home</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={navigateToCode} style={styles.backButton}>
+        <View style={styles.circle}>
+          <Icon name="arrow-back" size={30} color="#fff" />
+        </View>
+      </TouchableOpacity>
+      <Text style={styles.header}>Exercícios de HTML</Text>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+        <View key={exercises[currentExerciseIndex].id} style={styles.exerciseContainer}>
+          <Text style={styles.exerciseTitle}>{exercises[currentExerciseIndex].title}</Text>
+          <View style={styles.questionContainer}>
+            <Text style={styles.questionText}>{exercises[currentExerciseIndex].question}</Text>
+            {exercises[currentExerciseIndex].options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.optionButton,
+                  selectedAnswer === option.charAt(0) && styles.selectedOption
+                ]}
+                onPress={() => setSelectedAnswer(option.charAt(0))}
+              >
+                <Text style={styles.optionText}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.checkButton} onPress={checkAnswer}>
+              <Text style={styles.checkButtonText}>Verificar Resposta</Text>
+            </TouchableOpacity>
+            {feedback !== '' && <Text style={isCorrect ? styles.correctFeedback : styles.incorrectFeedback}>{feedback}</Text>}
+            <TouchableOpacity
+              style={[styles.nextButton, !isCorrect && { backgroundColor: '#ccc' }]}
+              onPress={nextExercise}
+              disabled={!isCorrect}
+            >
+              <Text style={styles.nextButtonText}>Próximo Exercício</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
-      <Button title="Próximo Exercício" onPress={nextExercise} disabled={feedback === '' || currentExerciseIndex === htmlExercises.length - 1} />
-      {currentExerciseIndex === htmlExercises.length && <Button title="Reiniciar Exercícios" onPress={resetExercises} />}
+      {currentExerciseIndex === exercises.length - 1 && (
+        <TouchableOpacity style={styles.resetButton} onPress={resetExercises}>
+          <Text style={styles.resetButtonText}>Reiniciar Exercícios</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#545454',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+  },
+  congratsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+  },
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#545454',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#FFF',
+  },
+  scrollContainer: {
+    width: '100%',
+  },
+  scrollContent: {
+    alignItems: 'center',
+  },
+  exerciseContainer: {
+    borderWidth: 1,
+    borderColor: '#545454',
+    borderRadius: 5,
+    padding: 20,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 20,
+    backgroundColor: '#363636',
+  },
+  exerciseTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#FFF',
+  },
+  questionContainer: {
+    padding: 20,
+    borderRadius: 5,
+    width: '100%',
+    backgroundColor: '#454545',
+  },
+  questionText: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: '#FFF',
+  },
+  optionButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#00ffff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  selectedOption: {
+    backgroundColor: '#2b961f',
+  },
+  optionText: {
+    fontSize: 16,
+    color: '#FFF',
+  },
+  checkButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#28a745',
+    alignItems: 'center',
+    width: '100%',
+  },
+  checkButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  correctFeedback: {
+    color: 'green',
+    marginTop: 10,
+    fontSize: 16,
+  },
+  incorrectFeedback: {
+    color: 'red',
+    marginTop: 10,
+    fontSize: 16,
+  },
+  nextButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#00ffff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  nextButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  resetButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#00ffff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  resetButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#FFF',
+  },
+});
 
 export default App;

@@ -1,90 +1,122 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../../services/firebaseConfig'; // Verifique o caminho correto para o firebaseConfig
+import { auth, firestore } from '../../../services/firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
 
-export default function Example({ navigation }) {
+export default function LoginScreen({ navigation }) {
   const [form, setForm] = useState({
     email: '',
     password: '',
     showPassword: false,
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigation.navigate('routes'); // Navegar para 'routes' se o usuário estiver logado
+        navigation.navigate('Routes');
+      } else {
+        setLoading(false);
       }
-      setLoading(false); // Defina loading como falso depois de verificar o estado de autenticação
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, []);
+  }, [navigation]);
 
   const handleLogin = async () => {
     if (form.email && form.password) {
+      setError(null); // Limpar erro antes de tentar login
+      setLoading(true); // Mostrar carregamento durante a autenticação
+
       try {
-        await signInWithEmailAndPassword(auth, form.email, form.password);
-        navigation.navigate('routes'); // Navegar para 'routes' após o login bem-sucedido
+        const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password);
+        const user = userCredential.user;
+
+        const userDoc = doc(firestore, 'users', user.uid);
+        const docSnapshot = await getDoc(userDoc);
+
+        if (docSnapshot.exists()) {
+          console.log('Dados do documento:', docSnapshot.data());
+          navigation.navigate('Routes');
+        } else {
+          console.log('Nenhum documento encontrado para o UID:', user.uid);
+          setError('Dados do usuário não encontrados.');
+        }
       } catch (error) {
         console.error('Erro ao fazer login:', error);
-        Alert.alert('Erro', error.message);
+        setError('Erro ao fazer login. Verifique suas credenciais.');
+      } finally {
+        setLoading(false); // Parar carregamento após a tentativa de login
       }
     } else {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+      setError('Por favor, preencha todos os campos.');
     }
   };
 
   const handleSignUp = () => {
-    navigation.navigate('Singup'); // Verifique o nome correto da rota para a tela de cadastro
+    navigation.navigate('SignUp');
+  };
+
+  const handleForgotPassword = () => {
+    navigation.navigate('Esqueceu');
   };
 
   const togglePasswordVisibility = () => {
-    setForm({ ...form, showPassword: !form.showPassword });
+    setForm((prevForm) => ({ ...prevForm, showPassword: !prevForm.showPassword }));
   };
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={styles.centeredContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Image source={require('../../../assets/tech.png')} style={styles.image} />
         <View style={styles.header}>
           <Text style={styles.title}>Bem-vindo!</Text>
           <Text style={styles.subtitle}>Entre com sua conta</Text>
         </View>
         <View style={styles.form}>
-          <View style={styles.input}>
+          <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Email</Text>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
-              onChangeText={(email) => setForm({ ...form, email })}
+              onChangeText={(email) => setForm((prevForm) => ({ ...prevForm, email }))}
               placeholder="Tech@example.com"
               placeholderTextColor="#9ca3af"
               style={styles.inputControl}
               value={form.email}
             />
           </View>
-          <View style={styles.input}>
+          <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Senha</Text>
             <View style={styles.passwordContainer}>
               <TextInput
                 autoCorrect={false}
-                onChangeText={(password) => setForm({ ...form, password })}
+                onChangeText={(password) => setForm((prevForm) => ({ ...prevForm, password }))}
                 placeholder="********"
                 placeholderTextColor="#9ca3af"
-                style={[styles.inputControl, { flex: 1 }]}
+                style={[styles.inputControl, styles.passwordInput]}
                 secureTextEntry={!form.showPassword}
                 value={form.password}
               />
@@ -92,10 +124,14 @@ export default function Example({ navigation }) {
                 <FontAwesomeIcon icon={form.showPassword ? faEye : faEyeSlash} size={20} color="#6b7280" />
               </TouchableOpacity>
             </View>
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
+            </TouchableOpacity>
+            {error && <Text style={styles.errorText}>{error}</Text>}
           </View>
-          <View style={styles.formAction}>
-            <TouchableOpacity onPress={handleLogin} style={styles.btn}>
-              <Text style={styles.btnText}>Entrar</Text>
+          <View style={styles.actions}>
+            <TouchableOpacity onPress={handleLogin} style={styles.button}>
+              <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleSignUp}>
               <Text style={styles.linkText}>Cadastrar</Text>
@@ -109,30 +145,34 @@ export default function Example({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    flex: 1,
+    backgroundColor: '#363636',
+  },
+  centeredContainer: {
+    flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    alignItems: 'center',
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  image: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginVertical: 20,
   },
   header: {
-    marginVertical: 36,
+    marginBottom: 36,
     alignItems: 'center',
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#1d1d1d',
+    color: '#ffffff',
     marginBottom: 6,
     textAlign: 'center',
   },
@@ -143,57 +183,77 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   form: {
-    marginBottom: 24,
+    paddingHorizontal: 24,
   },
-  formAction: {
-    marginVertical: 24,
-    alignItems: 'center',
-  },
-  input: {
+  inputGroup: {
     marginBottom: 16,
   },
   inputLabel: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#222',
+    color: '#ffffff',
     marginBottom: 8,
   },
   inputControl: {
     height: 50,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#363636',
     paddingHorizontal: 16,
     borderRadius: 12,
     fontSize: 15,
     fontWeight: '500',
-    color: '#222',
+    color: '#ffffff',
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: '#00ffff',
   },
   passwordContainer: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  eyeIcon: {
-    marginLeft: -30,
+  passwordInput: {
+    flex: 1,
+    paddingRight: 50,
   },
-  btn: {
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+  },
+  button: {
     width: '100%',
     borderRadius: 25,
     paddingVertical: 12,
-    backgroundColor: '#007aff',
+    backgroundColor: '#00ffff',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 16,
   },
-  btnText: {
+  buttonText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: '#363636',
+  },
+  actions: {
+    marginTop: 24,
+    alignItems: 'center',
   },
   linkText: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#007aff',
+    color: '#00ffff',
     textDecorationLine: 'underline',
     marginTop: 16,
+  },
+  forgotPasswordText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#00ffff',
+    textDecorationLine: 'underline',
+    marginTop: 8,
+    alignSelf: 'flex-end',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 8,
+    textAlign: 'center',
   },
 });

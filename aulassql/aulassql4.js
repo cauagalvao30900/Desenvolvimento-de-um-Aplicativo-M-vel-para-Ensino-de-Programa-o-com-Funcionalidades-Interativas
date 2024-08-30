@@ -14,13 +14,13 @@ const SQLLessonScreen4 = () => {
 
   const data = [
     {
-      id: '1',
+      id: '37',
       title: 'Junção de Tabelas (JOIN)',
       content: 'O comando JOIN é utilizado para combinar registros de duas ou mais tabelas em um resultado.',
       code: 'SELECT coluna1, coluna2 FROM tabela1 JOIN tabela2 ON tabela1.chave = tabela2.chave;',
     },
     {
-      id: '2',
+      id: '38',
       title: 'Funções de Agregação',
       content: 'As funções de agregação são usadas para realizar cálculos em um conjunto de valores e retornar um único valor de resumo.',
       code: 'SELECT COUNT(coluna) AS total FROM tabela;',
@@ -44,7 +44,7 @@ const SQLLessonScreen4 = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#343434', // Cor de fundo atualizada
     paddingHorizontal: 20,
     paddingTop: 20,
   },
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: 'white', // Cor do texto atualizada
   },
   lessonContent: {
     marginBottom: 10,
@@ -65,14 +66,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
+    color: 'white', // Cor do texto atualizada
   },
   paragraph: {
     fontSize: 16,
     marginBottom: 10,
     textAlign: 'center',
+    color: 'white', // Cor do texto atualizada
   },
   codeBlock: {
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#1e1e1e', // Cor de fundo do bloco de código
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
@@ -80,6 +83,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   codeText: {
+    color: 'white', // Cor do texto do código
     fontFamily: 'Courier New',
   },
 });

@@ -1,19 +1,35 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import {getAuth} from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// firebaseConfig.js
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
-// Your web app's Firebase configuration
+// Configuração do Firebase (substitua com as suas credenciais)
 const firebaseConfig = {
-  apiKey: "AIzaSyCulZddX4SDWIs9ZY2TnVnb1osOcKrCgd8",
-  authDomain: "techlearn-6f8bf.firebaseapp.com",
-  projectId: "techlearn-6f8bf",
-  storageBucket: "techlearn-6f8bf.appspot.com",
-  messagingSenderId: "12209374757",
-  appId: "1:12209374757:web:e1833c93224da6ce0ce1cc"
+  apiKey: "AIzaSyAm0OUa0LQZonSggsN2FwL5utNqK44fUuU",
+  authDomain: "techlearn-5e347.firebaseapp.com",
+  projectId: "techlearn-5e347",
+  storageBucket: "techlearn-5e347.appspot.com",
+  messagingSenderId: "245186807993",
+  appId: "1:245186807993:web:e0139066f5e31eae6c3368"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// Inicializa o Firebase
+let app;
+let auth;
+let firestore;
+let storage;
+
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  firestore = getFirestore(app);
+  storage = getStorage(app);
+
+  console.log('Firebase inicializado com sucesso');
+} catch (error) {
+  console.error('Erro ao inicializar o Firebase:', error);
+}
+
+// Exporta as instâncias para uso em outras partes do aplicativo
+export { auth, firestore, storage };

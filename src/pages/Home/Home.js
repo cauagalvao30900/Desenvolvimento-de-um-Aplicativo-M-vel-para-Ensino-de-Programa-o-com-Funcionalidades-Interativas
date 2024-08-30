@@ -1,18 +1,87 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Image, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, SafeAreaView, Image, Dimensions, Text, TouchableOpacity, View, ScrollView, StatusBar } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
+const backgroundImage = require('../../../assets/tech.png');
 
-export default function Example() {
+export default function HomeScreen() {
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        style={styles.background}
-        source={{ uri: 'https://cdn.discordapp.com/attachments/1134949806679281714/1246646628618862602/logo.jpg?ex=665fc8a5&is=665e7725&hm=92e50441ad76ac9e843bba51f6a41ac557a6c28d2c3b84ee81d9750a9899a2fa&' }}
+      <StatusBar barStyle="light-content" />
+      <View style={styles.backgroundContainer}>
+        <Image
+          style={styles.background}
+          source={backgroundImage}
+          resizeMode="contain"
         />
+      </View>
+
+      <View style={styles.overlay} />
+
+      <View style={styles.mainContent}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {/* Menu de Scroll Horizontal */}
+          <ScrollView horizontal={true} style={styles.horizontalMenu} showsHorizontalScrollIndicator={false}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Rct')}>
+              <Text style={styles.menuText}>React</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('exhtml')}>
+              <Text style={styles.menuText}>HTML</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Video Aulas')}>
+              <Text style={styles.menuText}>Vídeos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('privacidade')}>
+              <Text style={styles.menuText}>Termos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Aulas5')}>
+              <Text style={styles.menuText}>Aulas5</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Aulas6')}>
+              <Text style={styles.menuText}>Aulas6</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('privacidade')}>
+              <Text style={styles.menuText}>Termos</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </ScrollView>
+
+        <View style={styles.bottomSection}>
+          <View style={styles.topSection}>
+            <Text style={styles.welcomeText}>Continue de onde parou</Text>
+            <Text style={styles.subText}>Explore mais conteúdos que você gosta.</Text>
+          </View>
+
+          <Text style={styles.sectionTitle}>Ações Rápidas</Text>
+          <View style={styles.quickActions}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => navigation.navigate('Comunidade')}
+            >
+              <Icon name="people" size={30} color="#00ffff" />
+              <Text style={styles.actionText}>Comunidade</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => navigation.navigate('atualizações')}
+            >
+              <Icon name="newspaper" size={30} color="#00ffff" />
+              <Text style={styles.actionText}>Últimas Atualizações</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => navigation.navigate('favoritos')}
+            >
+              <Icon name="heart" size={30} color="#00ffff" />
+              <Text style={styles.actionText}>Favoritos</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -20,44 +89,115 @@ export default function Example() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1b1d1b',
+    backgroundColor: '#343434', // Cor de fundo principal
   },
-  background: {
+  backgroundContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: width,
-    height: height,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center', // Centraliza a logo verticalmente
+    alignItems: 'center', // Centraliza a logo horizontalmente
+  },
+  background: {
+    width: 200, // Ajuste conforme o tamanho da sua logo
+    height: 200, // Ajuste conforme o tamanho da sua logo
   },
   overlay: {
-    
-  },
-  content: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
+    left: 0,
     width: '100%',
-    paddingHorizontal: 24,
-    paddingBottom: 85, 
-    alignItems: 'center',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
-  title: {
-    fontSize: 32,
+  mainContent: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    padding: 20,
+  },
+  horizontalMenu: {
+    marginBottom: 50,
+    position: 'absolute',
+    paddingVertical: 240,
+    flexDirection: 'row',
+    width: '400%',
+    bottom: -270,
+    marginTop: 0,
+    overflow: 'hidden',
+  },
+  menuItem: {
+    marginHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#333',
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#00ffff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuText: {
+    fontSize: 14,
     color: '#fff',
-    marginBottom: 12, 
+  },
+  bottomSection: {
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    backgroundColor: '#262626',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  topSection: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  welcomeText: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: 'bold',
     textAlign: 'center',
   },
-  button: {
-    minWidth: '70%',
-    padding: 15,
+  subText: {
+    fontSize: 14,
+    color: '#fff',
+    marginTop: 5,
+    textAlign: 'center',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  actionButton: {
+    width: '30%',
+    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.75)',
+    backgroundColor: '#333',
+    borderColor: '#00ffff',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 10,
+    elevation: 5,
   },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: '500',
+  actionText: {
+    fontSize: 14,
+    color: '#fff',
+    marginTop: 5,
+    textAlign: 'center',
   },
 });
-
-//GITHUB TESTE

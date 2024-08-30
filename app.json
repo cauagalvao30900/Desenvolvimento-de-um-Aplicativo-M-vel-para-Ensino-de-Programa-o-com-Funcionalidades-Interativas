@@ -4,12 +4,12 @@
     "slug": "tcc24",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/L.png",
+    "icon": "./assets/tech.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/L.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/logo.png",
+      "resizeMode": "cover",  
+      "backgroundColor": "#FFFFFF"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -19,8 +19,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/L.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/tech.png",
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.euc4u4.tcc24",
       "versionCode": 1,
@@ -29,7 +29,7 @@
       ]
     },
     "web": {
-      "favicon": "./assets/L.png"
+      "favicon": "./assets/tech.png"
     },
     "extra": {
       "eas": {

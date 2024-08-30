@@ -5,7 +5,6 @@ import { View, ActivityIndicator, Image, StatusBar } from 'react-native';
 import Home from './pages/Home/Home';
 import New from './pages/New/New';
 import Aulas from './pages/Aulas/Aulas';
-import Search from './pages/PC bottleneck/PC bottleneck';
 import Rct from './pages/Rct/Rct';
 import RstBasic from './pages/Rct/RstBasic'; 
 import ButtonNew from './pages/components/ButtonNew';
@@ -13,18 +12,16 @@ import { Entypo, Feather } from '@expo/vector-icons';
 import reactj from './pages/New/reactj';
 import Code from  './Code/Code';
 import Telaperfil from './pages/Perfil/Telaperfil';
-import Singup from './pages/Perfil/Singup';
+import SignUp from './pages/acesso/SignUp';
 import phpp from './pages/New/phpp';
 import sql from './pages/New/sql';
 import html from './pages/New/html';
-import hardware from './pages/New/hardware';
 import Rstinter from './pages/Rct/Rstinter';
 import Rstavanced from './pages/Rct/Rstavanced';
 import aula2 from '../Aulasreact/aula2';
 import aula3 from '../Aulasreact/aula3';
 import aula4 from '../Aulasreact/aula4';
 import aula5 from '../Aulasreact/aula5';
-import pcbottleneck from './pages/PC bottleneck/PC bottleneck';
 import shop from '../Shop/Shop';
 import Shop from '../Shop/Shop';
 import Contatar from './pages/Perfil/Contatar';
@@ -55,6 +52,17 @@ import exphp from '../src/pages/exreact/exphp';
 import exreact from '../src/pages/exreact/exrct';
 import exsql from '../src/pages/exreact/exsql';
 import entrar from '../src/pages/acesso/entrar';
+import atualizações from '../src/pages/Home/atualizações';
+import favoritos from '../src/pages/Home/favoritos';
+import cursos from '../src/pages/Home/cursos';
+import Comunidade from '../Comunidade/Comunidade';
+import notificacao from '../Comunidade/notificacao';
+import Post from '../Comunidade/Post';
+import PostDetail from '../Comunidade/Postdetail';
+import RewardsScreen from '../src/pages/Perfil/RewardsScreen';
+import amigo from '../src/pages/Perfil/amigo';
+import modal from '../src/pages/Perfil/modal';
+
 
 
 
@@ -66,9 +74,28 @@ function MainTabNavigator() {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: '#00ffff',
         tabBarInactiveTintColor: 'white',
-        tabBarStyle: { backgroundColor: 'gray' },
+        tabBarStyle: {
+          backgroundColor: '#363636',
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        tabBarIconStyle: {
+          transform: [{ scale: 0.95 }],
+          transition: 'transform 0.2s',
+        },
+      }}
+      tabBarOptions={{
+        activeTintColor: '#00ffff',
+        inactiveTintColor: 'white',
+        style: {
+          backgroundColor: '#363636',
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
       }}
     >
       <Tab.Screen
@@ -143,7 +170,7 @@ export default function Routes() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Image
-          source={{ uri: 'https://cdn.discordapp.com/attachments/826597059355607040/1217971341710458960/Imagem_do_WhatsApp_de_2024-02-24_as_00.03.55_996c878f.jpg?ex=6605f734&is=65f38234&hm=9c893f99dbd9f114a7c91106a6aaa8da98ee9a9a973be1bdc31ef7846f0fd009&' }}
+          source={{ uri: 'https://drive.google.com/uc?export=view&id=1u-rOBdhuA-ZOCKh_GIC_e-dnf3mGpBK2' }}
           style={{ width: 200, height: 500 }}
         />
       </View>
@@ -152,14 +179,13 @@ export default function Routes() {
 
   return (
     <>
-      <StatusBar backgroundColor="white" barStyle="light-content" />
+      <StatusBar backgroundColor="transparent" translucent={true} barStyle="light-content" />
       <Stack.Navigator>
         <Stack.Screen
           name="MainTabs"
           component={MainTabNavigator}
           options={{ headerShown: false }}
         />
-
         
         <Stack.Screen
           name="Rct"
@@ -187,6 +213,12 @@ export default function Routes() {
           component={reactj}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="cursos"
+          component={cursos}
+          options={{ headerShown: false }}
+        />
+
 
         <Stack.Screen
           name="phpp"
@@ -205,18 +237,7 @@ export default function Routes() {
           component={html}
           options={{ headerShown: false }}
         />
-
-        <Stack.Screen
-          name="hardware"
-          component={hardware}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="PC bottleneck"
-          component={pcbottleneck}
-          options={{ headerShown: false }}
-        />
-
+  
         <Stack.Screen
           name="Aula2"
           component={aula2}
@@ -379,10 +400,16 @@ export default function Routes() {
           component={exreact}
           options={{ headerShown: false }}
         />
+      
 
         <Stack.Screen
           name="exhtml"
           component={exhtml}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="favoritos"
+          component={favoritos}
           options={{ headerShown: false }}
         />
          <Stack.Screen
@@ -402,6 +429,11 @@ export default function Routes() {
           component={entrar}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="atualizações"
+          component={atualizações}
+          options={{ headerShown: false }}
+        />
         
         <Stack.Screen
           name="Telaperfil"
@@ -419,10 +451,52 @@ export default function Routes() {
         />
 
         <Stack.Screen
-          name="Singup"
-          component={Singup}
+          name="SignUp"
+          component={SignUp}
           options={{ headerShown: false }}
         />
+
+
+<Stack.Screen
+          name="Comunidade"
+          component={Comunidade}
+          options={{ headerShown: false }}
+        />
+
+
+<Stack.Screen
+          name="notificacao"
+          component={notificacao}
+          options={{ headerShown: false }}
+        />
+
+<Stack.Screen
+          name="Post"
+          component={Post}
+          options={{ headerShown: false }}
+        />
+
+<Stack.Screen
+          name="PostDetail"
+          component={PostDetail}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RewardsScreen"
+          component={RewardsScreen}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="amigo"
+          component={amigo}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="modal"
+          component={modal}
+          options={{ headerShown: false }}
+        />
+
 
       </Stack.Navigator>
       {isLoading && (
