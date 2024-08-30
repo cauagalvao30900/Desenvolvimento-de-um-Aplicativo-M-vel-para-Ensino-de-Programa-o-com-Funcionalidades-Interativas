@@ -17,7 +17,11 @@ Bem-vindo ao **TechLearn**, uma plataforma completa e interativa para aprender p
 
 ## Tecnologias Utilizadas
 
+<<<<<<< HEAD
 - **Frontend:** React Native (para aplicativo móvel)
+=======
+- **Frontend:** React Native JS(para aplicativo móvel)
+>>>>>>> 8aa71fbde7981312ccb4524abef907d33a2471cb
 - **Backend:** Firebase (para autenticação e banco de dados)
 
 
