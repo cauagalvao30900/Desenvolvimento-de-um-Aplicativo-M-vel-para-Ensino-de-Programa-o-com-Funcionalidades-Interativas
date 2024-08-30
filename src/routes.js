@@ -168,12 +168,12 @@ export default function Routes() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Image
-          source={{ uri: 'https://drive.google.com/uc?export=view&id=1u-rOBdhuA-ZOCKh_GIC_e-dnf3mGpBK2' }}
-          style={{ width: 200, height: 500 }}
-        />
-      </View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: Platform.OS === 'ios' ? 70 : StatusBar.currentHeight }}>
+      <Image
+        source={{ uri: 'https://drive.google.com/uc?export=view&id=1u-rOBdhuA-ZOCKh_GIC_e-dnf3mGpBK2' }}
+        style={{ width: 200, height: 500 }}
+      />
+    </View>
     );
   }
 
