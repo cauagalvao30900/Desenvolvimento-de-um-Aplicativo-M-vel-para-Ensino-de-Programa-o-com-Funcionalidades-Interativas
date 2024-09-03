@@ -81,7 +81,7 @@ export default function LoginScreen({ navigation }) {
   if (loading) {
     return (
       <SafeAreaView style={styles.centeredContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <Image source={require('../../../assets/loading.gif')} style={styles.loadingGif} />
       </SafeAreaView>
     );
   }
@@ -255,5 +255,10 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 8,
     textAlign: 'center',
+  },
+  loadingGif: {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain',
   },
 });

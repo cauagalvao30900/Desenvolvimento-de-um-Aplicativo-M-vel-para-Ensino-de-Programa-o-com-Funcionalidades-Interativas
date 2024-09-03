@@ -108,7 +108,7 @@ function App() {
   };
 
   const navigateToHome = () => {
-    navigation.navigate('Code');
+    navigation.navigate('Home');
   };
 
   const navigateToCode = () => {
@@ -118,14 +118,12 @@ function App() {
   if (showCongrats) {
     return (
       <View style={styles.congratsContainer}>
-        <TouchableOpacity onPress={navigateToCode} style={styles.backButton}>
-          <View style={styles.circle}>
-            <Icon name="arrow-back" size={30} color="#fff" />
-          </View>
-        </TouchableOpacity>
         <Text style={styles.congratsText}>Parabéns! Você concluiu todos os exercícios!</Text>
         <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
           <Text style={styles.homeButtonText}>Voltar para Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.resetButton} onPress={resetExercises}>
+          <Text style={styles.resetButtonText}>Reiniciar Exercícios</Text>
         </TouchableOpacity>
       </View>
     );
@@ -191,6 +189,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: '#545454',
   },
   backButton: {
     position: 'absolute',
@@ -290,7 +289,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#00ffff',
+    backgroundColor: '#007bff',
     alignItems: 'center',
     width: '100%',
   },
@@ -303,7 +302,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#00ffff',
+    backgroundColor: '#dc3545',
     alignItems: 'center',
     width: '100%',
   },
@@ -311,14 +310,25 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 18,
+  congratsText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
     color: '#FFF',
+    textAlign: 'center',
+  },
+  homeButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#007bff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  homeButtonText: {
+    color: '#FFF',
+    fontSize: 16,
   },
 });
 

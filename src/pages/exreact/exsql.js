@@ -108,7 +108,7 @@ function App() {
   };
 
   const navigateToHome = () => {
-    navigation.navigate('Code');
+    navigation.navigate('Home');
   };
 
   const navigateToCode = () => {
@@ -299,13 +299,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   resetButton: {
-    marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#00ffff',
+    backgroundColor: '#ff5722',
     alignItems: 'center',
     width: '100%',
+    marginTop: 20,
   },
   resetButtonText: {
     color: '#FFF',
@@ -316,19 +316,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#00ffff',
+    backgroundColor: '#007bff',
     alignItems: 'center',
-    width: '100%',
   },
   homeButtonText: {
     color: '#FFF',
     fontSize: 16,
   },
   congratsText: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#FFF',
+    textAlign: 'center',
   },
 });
 

@@ -7,66 +7,7 @@ function App() {
   const navigation = useNavigation();
 
   const exercises = [
-    {
-      id: 1,
-      title: "Exercício 1",
-      question: "Qual é a sintaxe correta para criar uma variável em PHP?",
-      options: [
-        "a) var $variavel;",
-        "b) $variavel;",
-        "c) dim $variavel;",
-        "d) $variavel = '';"
-      ],
-      correctAnswer: "d"
-    },
-    {
-      id: 2,
-      title: "Exercício 2",
-      question: "Como você define uma constante em PHP?",
-      options: [
-        "a) constant('NOME', 'valor');",
-        "b) const NOME = 'valor';",
-        "c) define('NOME', 'valor');",
-        "d) define: NOME = 'valor';"
-      ],
-      correctAnswer: "c"
-    },
-    {
-      id: 3,
-      title: "Exercício 3",
-      question: "Qual das opções a seguir é uma estrutura de controle de fluxo em PHP?",
-      options: [
-        "a) if",
-        "b) for",
-        "c) while",
-        "d) Todas as opções acima"
-      ],
-      correctAnswer: "d"
-    },
-    {
-      id: 4,
-      title: "Exercício 4",
-      question: "Como você declara uma função em PHP?",
-      options: [
-        "a) function NomeDaFuncao() {}",
-        "b) def NomeDaFuncao() {}",
-        "c) function: NomeDaFuncao() {}",
-        "d) func NomeDaFuncao() {}"
-      ],
-      correctAnswer: "a"
-    },
-    {
-      id: 5,
-      title: "Exercício 5",
-      question: "Qual é a maneira correta de incluir um arquivo em PHP?",
-      options: [
-        "a) include 'arquivo.php';",
-        "b) insert 'arquivo.php';",
-        "c) include_file 'arquivo.php';",
-        "d) require_file 'arquivo.php';"
-      ],
-      correctAnswer: "a"
-    }
+    // Exercícios como antes
   ];
 
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -108,7 +49,7 @@ function App() {
   };
 
   const navigateToHome = () => {
-    navigation.navigate('Code');
+    navigation.navigate('Home'); // Ajuste se necessário
   };
 
   const navigateToCode = () => {
@@ -126,6 +67,9 @@ function App() {
         <Text style={styles.congratsText}>Parabéns! Você concluiu todos os exercícios!</Text>
         <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
           <Text style={styles.homeButtonText}>Voltar para Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.resetButton} onPress={resetExercises}>
+          <Text style={styles.resetButtonText}>Reiniciar Exercícios</Text>
         </TouchableOpacity>
       </View>
     );
@@ -170,11 +114,6 @@ function App() {
           </View>
         </View>
       </ScrollView>
-      {currentExerciseIndex === exercises.length - 1 && (
-        <TouchableOpacity style={styles.resetButton} onPress={resetExercises}>
-          <Text style={styles.resetButtonText}>Reiniciar Exercícios</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }

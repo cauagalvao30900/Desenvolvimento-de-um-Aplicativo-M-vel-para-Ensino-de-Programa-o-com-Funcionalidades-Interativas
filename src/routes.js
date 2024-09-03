@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, ActivityIndicator, Image, StatusBar } from 'react-native';
+import { View, ActivityIndicator, Image, StatusBar, Platform } from 'react-native';
 import Home from './pages/Home/Home';
 import New from './pages/New/New';
 import Aulas from './pages/Aulas/Aulas';

@@ -7,13 +7,10 @@
     "icon": "./assets/tech.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo.png",
-      "resizeMode": "cover",  
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true
     },

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 function App() {
   const navigation = useNavigation();
-
+  
   const exercises = [
     {
       id: 1,
@@ -75,6 +75,8 @@ function App() {
   const [isCorrect, setIsCorrect] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
 
+  const fadeAnim = useState(new Animated.Value(0))[0];
+
   const checkAnswer = () => {
     const correctAnswer = exercises[currentExerciseIndex].correctAnswer;
     if (selectedAnswer === correctAnswer) {
@@ -90,6 +92,11 @@ function App() {
     if (isCorrect) {
       if (currentExerciseIndex === exercises.length - 1) {
         setShowCongrats(true);
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true
+        }).start();
       } else {
         setFeedback('');
         setSelectedAnswer('');
@@ -105,6 +112,7 @@ function App() {
     setSelectedAnswer('');
     setIsCorrect(false);
     setShowCongrats(false);
+    fadeAnim.setValue(0);  // Reset fade animation
   };
 
   const navigateToHome = () => {
@@ -117,7 +125,7 @@ function App() {
 
   if (showCongrats) {
     return (
-      <View style={styles.congratsContainer}>
+      <Animated.View style={[styles.congratsContainer, { opacity: fadeAnim }]}>
         <TouchableOpacity onPress={navigateToCode} style={styles.backButton}>
           <View style={styles.circle}>
             <Icon name="arrow-back" size={30} color="#fff" />
@@ -127,7 +135,10 @@ function App() {
         <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
           <Text style={styles.homeButtonText}>Voltar para Home</Text>
         </TouchableOpacity>
-      </View>
+        <TouchableOpacity style={styles.resetButton} onPress={resetExercises}>
+          <Text style={styles.resetButtonText}>Reiniciar Exercícios</Text>
+        </TouchableOpacity>
+      </Animated.View>
     );
   }
 
@@ -191,6 +202,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: '#333',
   },
   backButton: {
     position: 'absolute',
@@ -263,66 +275,69 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   checkButton: {
-    marginTop: 20,
+    backgroundColor: '#007bff',
     paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#28a745',
+    marginTop: 20,
     alignItems: 'center',
     width: '100%',
   },
   checkButtonText: {
-    color: '#FFF',
     fontSize: 16,
+    color: '#FFF',
   },
   correctFeedback: {
-    color: 'green',
+    color: '#00ff00',
     marginTop: 10,
     fontSize: 16,
   },
   incorrectFeedback: {
-    color: 'red',
+    color: '#ff0000',
     marginTop: 10,
     fontSize: 16,
   },
   nextButton: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
     backgroundColor: '#007bff',
+    paddingVertical: 10,
+    borderRadius: 25,
+    marginTop: 20,
     alignItems: 'center',
     width: '100%',
   },
   nextButtonText: {
-    color: '#FFF',
     fontSize: 16,
+    color: '#FFF',
   },
   resetButton: {
-    marginTop: 20,
+    backgroundColor: '#ff5722',
     paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#00ffff',
+    marginTop: 20,
     alignItems: 'center',
     width: '100%',
   },
   resetButtonText: {
-    color: '#FFF',
     fontSize: 16,
+    color: '#FFF',
   },
   homeButton: {
-    marginTop: 20,
+    backgroundColor: '#4CAF50',
     paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#00ffff',
+    marginTop: 20,
     alignItems: 'center',
     width: '100%',
   },
   homeButtonText: {
-    color: '#FFF',
     fontSize: 16,
+    color: '#FFF',
+  },
+  congratsText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#00ff00',
+    marginBottom: 20,
+    textAlign: 'center',
   },
 });
 

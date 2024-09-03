@@ -205,11 +205,15 @@ export default function ProfileScreen() {
               <Text style={styles.rowLabel}>Política de privacidade</Text>
               <FeatherIcon color="#ffffff" name="lock" size={20} />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.navigate('entrar'); }} style={styles.rowWrapper}>
+              <Text style={styles.rowLabel}>Sair</Text>
+              <FeatherIcon color="#ffffff" name="log-out" size={20} />
+            </TouchableOpacity>
           </View>
         </View>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Sair</Text>
+          <Text style={styles.logoutButtonText}></Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -240,7 +244,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#343434',
+    backgroundColor: '#565656',
   },
   container: {
     flexGrow: 1,
@@ -305,12 +309,7 @@ const styles = StyleSheet.create({
   medalIcon: {
     padding: 8,
   },
-  logoutButton: {
-    backgroundColor: '#FF0000',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
+ 
   logoutButtonText: {
     color: '#ffffff',
     fontSize: 16,
