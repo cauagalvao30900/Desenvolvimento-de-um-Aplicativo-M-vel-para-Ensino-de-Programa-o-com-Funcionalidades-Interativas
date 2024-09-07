@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#007bff',
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   resetButton: {
-    backgroundColor: '#ff5722',
+    backgroundColor: '#007bff',
     paddingVertical: 10,
     borderRadius: 25,
     marginTop: 20,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   homeButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#007bff',
     paddingVertical: 10,
     borderRadius: 25,
     marginTop: 20,

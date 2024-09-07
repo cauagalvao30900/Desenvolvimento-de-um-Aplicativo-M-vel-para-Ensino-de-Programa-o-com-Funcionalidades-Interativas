@@ -1,13 +1,48 @@
 import React, { useState } from 'react';
-import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 function App() {
   const navigation = useNavigation();
 
+  // Exercícios de PHP
   const exercises = [
-    // Exercícios como antes
+    {
+      id: 1,
+      title: 'Exercício 1',
+      question: 'Qual é o comando para exibir "Hello, World!" em PHP?',
+      options: ['A) echo "Hello, World!";', 'B) print "Hello, World!";', 'C) printf("Hello, World!");'],
+      correctAnswer: 'A'
+    },
+    {
+      id: 2,
+      title: 'Exercício 2',
+      question: 'Como você define uma variável em PHP?',
+      options: ['A) $variavel = "valor";', 'B) let variavel = "valor";', 'C) var variavel = "valor";'],
+      correctAnswer: 'A'
+    },
+    {
+      id: 3,
+      title: 'Exercício 3',
+      question: 'Qual é a sintaxe correta para um comentário de uma linha em PHP?',
+      options: ['A) // Comentário', 'B) <!-- Comentário -->', 'C) /* Comentário */'],
+      correctAnswer: 'A'
+    },
+    {
+      id: 4,
+      title: 'Exercício 4',
+      question: 'Como você inclui um arquivo PHP em outro arquivo PHP?',
+      options: ['A) include "arquivo.php";', 'B) import "arquivo.php";', 'C) require "arquivo.php";'],
+      correctAnswer: 'A'
+    },
+    {
+      id: 5,
+      title: 'Exercício 5',
+      question: 'Qual é a função para verificar se uma variável está definida em PHP?',
+      options: ['A) isset($variavel);', 'B) defined($variavel);', 'C) is_defined($variavel);'],
+      correctAnswer: 'A'
+    },
   ];
 
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -17,13 +52,15 @@ function App() {
   const [showCongrats, setShowCongrats] = useState(false);
 
   const checkAnswer = () => {
-    const correctAnswer = exercises[currentExerciseIndex].correctAnswer;
-    if (selectedAnswer === correctAnswer) {
-      setFeedback('Resposta correta!');
-      setIsCorrect(true);
-    } else {
-      setFeedback('Resposta incorreta. Tente novamente.');
-      setIsCorrect(false);
+    if (exercises[currentExerciseIndex]) {
+      const correctAnswer = exercises[currentExerciseIndex].correctAnswer;
+      if (selectedAnswer === correctAnswer) {
+        setFeedback('Resposta correta!');
+        setIsCorrect(true);
+      } else {
+        setFeedback('Resposta incorreta. Tente novamente.');
+        setIsCorrect(false);
+      }
     }
   };
 
@@ -49,7 +86,7 @@ function App() {
   };
 
   const navigateToHome = () => {
-    navigation.navigate('Home'); // Ajuste se necessário
+    navigation.navigate('Code'); // Ajuste se necessário
   };
 
   const navigateToCode = () => {
@@ -64,6 +101,7 @@ function App() {
             <Icon name="arrow-back" size={30} color="#fff" />
           </View>
         </TouchableOpacity>
+        <Image source={{uri: 'https://example.com/congrats-image.png'}} style={styles.congratsImage} />
         <Text style={styles.congratsText}>Parabéns! Você concluiu todos os exercícios!</Text>
         <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
           <Text style={styles.homeButtonText}>Voltar para Home</Text>
@@ -75,6 +113,8 @@ function App() {
     );
   }
 
+  const currentExercise = exercises[currentExerciseIndex];
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={navigateToCode} style={styles.backButton}>
@@ -84,35 +124,39 @@ function App() {
       </TouchableOpacity>
       <Text style={styles.header}>Exercícios de PHP</Text>
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
-        <View key={exercises[currentExerciseIndex].id} style={styles.exerciseContainer}>
-          <Text style={styles.exerciseTitle}>{exercises[currentExerciseIndex].title}</Text>
-          <View style={styles.questionContainer}>
-            <Text style={styles.questionText}>{exercises[currentExerciseIndex].question}</Text>
-            {exercises[currentExerciseIndex].options.map((option, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.optionButton,
-                  selectedAnswer === option.charAt(0) && styles.selectedOption
-                ]}
-                onPress={() => setSelectedAnswer(option.charAt(0))}
-              >
-                <Text style={styles.optionText}>{option}</Text>
+        {currentExercise ? (
+          <View key={currentExercise.id} style={styles.exerciseContainer}>
+            <Text style={styles.exerciseTitle}>{currentExercise.title}</Text>
+            <View style={styles.questionContainer}>
+              <Text style={styles.questionText}>{currentExercise.question}</Text>
+              {currentExercise.options.map((option, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.optionButton,
+                    selectedAnswer === option.charAt(0) && styles.selectedOption
+                  ]}
+                  onPress={() => setSelectedAnswer(option.charAt(0))}
+                >
+                  <Text style={styles.optionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+              <TouchableOpacity style={styles.checkButton} onPress={checkAnswer}>
+                <Text style={styles.checkButtonText}>Verificar Resposta</Text>
               </TouchableOpacity>
-            ))}
-            <TouchableOpacity style={styles.checkButton} onPress={checkAnswer}>
-              <Text style={styles.checkButtonText}>Verificar Resposta</Text>
-            </TouchableOpacity>
-            {feedback !== '' && <Text style={isCorrect ? styles.correctFeedback : styles.incorrectFeedback}>{feedback}</Text>}
-            <TouchableOpacity
-              style={[styles.nextButton, !isCorrect && { backgroundColor: '#ccc' }]}
-              onPress={nextExercise}
-              disabled={!isCorrect}
-            >
-              <Text style={styles.nextButtonText}>Próximo Exercício</Text>
-            </TouchableOpacity>
+              {feedback !== '' && <Text style={isCorrect ? styles.correctFeedback : styles.incorrectFeedback}>{feedback}</Text>}
+              <TouchableOpacity
+                style={[styles.nextButton, !isCorrect && { backgroundColor: '#ccc' }]}
+                onPress={nextExercise}
+                disabled={!isCorrect}
+              >
+                <Text style={styles.nextButtonText}>Próximo Exercício</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        ) : (
+          <Text style={styles.noExerciseText}>Nenhum exercício disponível.</Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -130,6 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: '#2e2e2e',
   },
   backButton: {
     position: 'absolute',
@@ -140,9 +185,50 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#007bff',
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  congratsImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+    borderRadius: 100,
+    borderWidth: 5,
+    borderColor: '#00ffff',
+  },
+  congratsText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFF',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  homeButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#00ffff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  homeButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  resetButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: '#007bff',
+    alignItems: 'center',
+    width: '100%',
+  },
+  resetButtonText: {
+    color: '#FFF',
+    fontSize: 16,
   },
   header: {
     fontSize: 24,
@@ -237,31 +323,10 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
   },
-  resetButton: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    backgroundColor: '#00ffff',
-    alignItems: 'center',
-    width: '100%',
-  },
-  resetButtonText: {
+  noExerciseText: {
     color: '#FFF',
-    fontSize: 16,
-  },
-  homeButton: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    backgroundColor: '#00ffff',
-    alignItems: 'center',
-    width: '100%',
-  },
-  homeButtonText: {
-    color: '#FFF',
-    fontSize: 16,
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 

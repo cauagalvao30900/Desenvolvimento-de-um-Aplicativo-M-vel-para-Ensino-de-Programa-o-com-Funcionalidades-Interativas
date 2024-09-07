@@ -108,7 +108,7 @@ function App() {
   };
 
   const navigateToHome = () => {
-    navigation.navigate('Home');
+    navigation.navigate('Code');
   };
 
   const navigateToCode = () => {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#28a745',
+    backgroundColor: '#007bff',
     alignItems: 'center',
     width: '100%',
   },
@@ -275,12 +275,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   correctFeedback: {
-    color: 'green',
+    color: '#00ff00',
     marginTop: 10,
     fontSize: 16,
   },
   incorrectFeedback: {
-    color: 'red',
+    color: '#ff0000',
     marginTop: 10,
     fontSize: 16,
   },
@@ -302,20 +302,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: '#dc3545',
+    backgroundColor: '#007bff',
     alignItems: 'center',
     width: '100%',
   },
   resetButtonText: {
     color: '#FFF',
     fontSize: 16,
-  },
-  congratsText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#FFF',
-    textAlign: 'center',
   },
   homeButton: {
     marginTop: 20,
@@ -329,6 +322,13 @@ const styles = StyleSheet.create({
   homeButtonText: {
     color: '#FFF',
     fontSize: 16,
+  },
+  congratsText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#00ff00',
+    marginBottom: 20,
+    textAlign: 'center',
   },
 });
 

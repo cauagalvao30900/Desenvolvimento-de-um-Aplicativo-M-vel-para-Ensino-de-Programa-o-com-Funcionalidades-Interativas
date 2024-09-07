@@ -11,11 +11,11 @@ export default function SignUp({ navigation }) {
   const [form, setForm] = useState({
     email: '',
     password: '',
-    username: '', // Adicionado estado para o nome de usuário
+    username: '',
     showPassword: false,
   });
 
-  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar a visibilidade do modal
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleSignUp = async () => {
     const { email, password, username } = form;
@@ -36,31 +36,27 @@ export default function SignUp({ navigation }) {
     }
 
     try {
-      // Cria o usuário no Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Cria um documento no Firestore para o usuário
       await setDoc(doc(firestore, 'users', user.uid), {
         email: email,
-        username: username, // Salva o nome de usuário no Firestore
+        username: username,
         createdAt: new Date(),
-        // Adicione mais dados que desejar salvar
       });
 
-      setModalVisible(true); // Mostrar o modal após a criação da conta
+      setModalVisible(true);
 
       setTimeout(() => {
         setModalVisible(false);
-        navigation.navigate('Entrar'); // Navegar para a tela de login
-      }, 2000); // Ajuste o tempo conforme necessário
+        navigation.navigate('Entrar');
+      }, 2000);
     } catch (error) {
       handleFirebaseError(error);
     }
   };
 
   const validateEmail = (email) => {
-    // Regex para validação de e-mail
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
@@ -160,7 +156,6 @@ export default function SignUp({ navigation }) {
           </View>
         </View>
 
-        {/* Modal de sucesso */}
         <Modal
           transparent={true}
           animationType="slide"
@@ -188,6 +183,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingTop: 0, // Remover qualquer padding no topo
   },
   goBackContainer: {
     position: 'absolute',
@@ -280,7 +276,7 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#ffffff',
+    color: '#000',
   },
   modalContainer: {
     flex: 1,

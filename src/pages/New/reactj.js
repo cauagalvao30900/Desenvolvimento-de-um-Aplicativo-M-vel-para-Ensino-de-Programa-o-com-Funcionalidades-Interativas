@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, View, Text, ScrollView, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { Video } from 'expo-av'; 
@@ -9,50 +7,16 @@ const videos = [
   {
     id: 1,
     title: 'Título do Vídeo 1',
-    thumbnail: require('../../../assets/lg.png'), // Caminho para o thumbnail na pasta assets
+    thumbnail: require('../../../assets/tech.png'),
     channel: 'TechLearn',
     views: '0 views',
     uploadDate: 'Há 1 semana',
-    videoUrl: require('../../../assets/aulateste.mp4') // Caminho para o vídeo na pasta assets
+    videoUrl: require('../../../assets/aulateste.mp4')
   },
-  {
-    id: 1,
-    title: 'Título do Vídeo 1',
-    thumbnail: require('../../../assets/lg.png'), // Caminho para o thumbnail na pasta assets
-    channel: 'TechLearn',
-    views: '0 views',
-    uploadDate: 'Há 1 semana',
-    videoUrl: require('../../../assets/aulateste.mp4') // Caminho para o vídeo na pasta assets
-  },
-  {
-    id: 1,
-    title: 'Título do Vídeo 1',
-    thumbnail: require('../../../assets/lg.png'), // Caminho para o thumbnail na pasta assets
-    channel: 'TechLearn',
-    views: '0 views',
-    uploadDate: 'Há 1 semana',
-    videoUrl: require('../../../assets/aulateste.mp4') // Caminho para o vídeo na pasta assets
-  },
-  {
-    id: 1,
-    title: 'Título do Vídeo 1',
-    thumbnail: require('../../../assets/lg.png'), // Caminho para o thumbnail na pasta assets
-    channel: 'TechLearn',
-    views: '0 views',
-    uploadDate: 'Há 1 semana',
-    videoUrl: require('../../../assets/aulateste.mp4') // Caminho para o vídeo na pasta assets
-  },
-  {
-    id: 1,
-    title: 'Título do Vídeo 1',
-    thumbnail: require('../../../assets/lg.png'), // Caminho para o thumbnail na pasta assets
-    channel: 'TechLearn',
-    views: '0 views',
-    uploadDate: 'Há 1 semana',
-    videoUrl: require('../../../assets/aulateste.mp4') // Caminho para o vídeo na pasta assets
-  },
+  // Outros vídeos...
 ];
-export default function VideoScreen() {
+
+export default function VideoScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
 
@@ -68,14 +32,24 @@ export default function VideoScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+          <MaterialIcons name="arrow-back" size={30} color="#FFF" />
+        </Pressable>
         <Text style={styles.headerText}>Aulas de React</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {videos.map((video) => (
-          <TouchableOpacity key={video.id} style={styles.videoContainer} onPress={() => handleVideoPress(video.videoUrl)}>
+          <TouchableOpacity 
+            key={video.id} 
+            style={styles.videoContainer} 
+            onPress={() => handleVideoPress(video.videoUrl)}
+            activeOpacity={0.7} 
+          >
             <Image source={video.thumbnail} style={styles.thumbnail} />
             <View style={styles.videoInfo}>
               <Text style={styles.title}>{video.title}</Text>
+              <Text style={styles.channel}>{video.channel}</Text>
+              <Text style={styles.videoDetails}>{`${video.views} • ${video.uploadDate}`}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -106,21 +80,28 @@ export default function VideoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#343434',
+    backgroundColor: '#363636',
   },
   header: {
-    paddingVertical: 12,
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 20,
     backgroundColor: '#222',
     borderBottomWidth: 1,
     borderBottomColor: '#555',
-    paddingTop: 40, // Adicionado para descer o título
+    paddingTop: 40,
+  },
+  backButton: {
+    marginLeft: 10,
+    padding: 5,
   },
   headerText: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#FFF',
+    flex: 1,  
+    textAlign: 'center',  
+    marginRight: 40,  
   },
   scrollViewContent: {
     paddingHorizontal: 15,
@@ -129,12 +110,17 @@ const styles = StyleSheet.create({
   videoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#444',
-    borderRadius: 8,
+    backgroundColor: '#333',
+    borderRadius: 10,
     marginBottom: 15,
     padding: 10,
     borderWidth: 1,
     borderColor: '#555',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 5,
   },
   thumbnail: {
     width: 120,
@@ -150,12 +136,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFF',
   },
+  channel: {
+    color: '#AAA',
+    fontSize: 14,
+  },
+  videoDetails: {
+    color: '#777',
+    fontSize: 12,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    paddingTop: 40, // Adicionado para descer a flecha de voltar
+    paddingTop: 80,  
   },
   videoPlayer: {
     width: '90%',
@@ -163,7 +157,7 @@ const styles = StyleSheet.create({
   },
   backButtonModal: {
     position: 'absolute',
-    top: 60, // Aumentado para descer a flecha de voltar
+    top: 60,
     left: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 25,
@@ -171,4 +165,3 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 });
-

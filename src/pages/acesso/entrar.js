@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#363636',
+    paddingTop: 0, // Remover qualquer espaçamento superior
   },
   centeredContainer: {
     flex: 1,
