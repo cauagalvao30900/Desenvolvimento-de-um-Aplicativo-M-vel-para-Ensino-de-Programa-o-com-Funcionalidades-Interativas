@@ -14,7 +14,9 @@ const Comunidade = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [replyContent, setReplyContent] = useState('');
-  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyingTo, setReplyingTo] = useState([]);
+  const [privateMessages, setPrivateMessages] = useState([]);
+  const [unreadReplies, setUnreadReplies] = useState(0);
 
   const getUsernameFromEmail = (email) => {
     return email ? email.split('@')[0] : 'Usuário';
@@ -30,10 +32,27 @@ const Comunidade = ({ navigation }) => {
         ...doc.data()
       }));
       setPosts(postsData);
+      setUnreadReplies(postsData.filter(post => post.replyTo).length);
     });
 
     return () => unsubscribe();
   }, [selectedTopic]);
+
+  useEffect(() => {
+    const privateMessagesCollection = collection(firestore, 'privateMessages');
+    const q = query(privateMessagesCollection, where('receiverId', '==', auth.currentUser.uid), orderBy('timestamp', 'desc'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const messagesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPrivateMessages(messagesData);
+      setUnreadReplies(messagesData.filter(message => !message.read).length);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleAddPost = async () => {
     if (!newPostContent && !selectedImage) {
@@ -58,16 +77,19 @@ const Comunidade = ({ navigation }) => {
         content: newPostContent,
         userId: auth.currentUser.uid,
         username: getUsernameFromEmail(auth.currentUser.email),
-        userProfilePic: auth.currentUser.photoURL || 'https://via.placeholder.com/40', 
+        userProfilePic: auth.currentUser.photoURL || 'https://via.placeholder.com/40',
         topic: selectedTopic,
         timestamp: new Date(),
         imageUrl: imageUrl || null,
-        replyTo: replyingTo ? replyingTo.id : null,
+        replyTo: replyingTo.length ? replyingTo[0].id : null,
       });
 
+      setUnreadReplies(prev => prev + 1);
+
+      setPrivateMessages([...privateMessages, { content: newPostContent, userId: auth.currentUser.uid }]);
       setNewPostContent('');
       setSelectedImage(null);
-      setReplyingTo(null); 
+      setReplyingTo([]);
     } catch (error) {
       console.error('Erro ao adicionar mensagem: ', error);
     }
@@ -87,7 +109,7 @@ const Comunidade = ({ navigation }) => {
 
   const handleReply = (post) => {
     setSelectedPost(post);
-    setReplyingTo(post);
+    setReplyingTo([post]);
     setModalVisible(true);
   };
 
@@ -103,14 +125,14 @@ const Comunidade = ({ navigation }) => {
         userId: auth.currentUser.uid,
         username: getUsernameFromEmail(auth.currentUser.email),
         userProfilePic: auth.currentUser.photoURL || 'https://via.placeholder.com/40',
-        topic: replyingTo.topic,
+        topic: replyingTo[0].topic,
         timestamp: new Date(),
-        replyTo: replyingTo.id,
+        replyTo: replyingTo[0].id,
       });
 
       setReplyContent('');
       setModalVisible(false);
-      setReplyingTo(null);
+      setReplyingTo([]);
     } catch (error) {
       console.error('Erro ao responder mensagem: ', error);
     }
@@ -129,6 +151,11 @@ const Comunidade = ({ navigation }) => {
     }
   };
 
+  const handlePrivateMessage = (userId) => {
+    setUnreadReplies(0);
+    navigation.navigate('Direct', { userId });
+  };
+
   const renderItem = ({ item }) => (
     <View style={[styles.messageContainer, item.userId === auth.currentUser.uid ? styles.right : styles.left]}>
       {item.userId !== auth.currentUser.uid && (
@@ -137,7 +164,9 @@ const Comunidade = ({ navigation }) => {
       <View style={[styles.messageBubble, item.userId === auth.currentUser.uid ? styles.myMessage : styles.theirMessage]}>
         <View style={styles.headerContainer}>
           {item.userId !== auth.currentUser.uid && (
-            <Text style={styles.username}>{item.username || 'Usuário'}</Text>
+            <Text style={styles.username} onPress={() => handlePrivateMessage(item.userId)}>
+              {item.username || 'Usuário'}
+            </Text>
           )}
           {item.userId !== auth.currentUser.uid && (
             <TouchableOpacity onPress={() => handleReply(item)}>
@@ -170,6 +199,17 @@ const Comunidade = ({ navigation }) => {
         <Icon name="arrow-back" size={30} color="#fff" />
       </TouchableOpacity>
 
+      <View style={styles.airplaneContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Direct')} style={styles.airplaneIcon}>
+          <Icon name="send" size={30} color="#fff" />
+        </TouchableOpacity>
+        {/* {unreadReplies > 0 && (
+          <View style={styles.notificationBadge}>
+            <Text style={styles.badgeText}>{unreadReplies}</Text>
+          </View>
+        )} */}
+      </View>
+
       <View style={styles.topicsContainer}>
         {topics.map((topic, index) => (
           <TouchableOpacity
@@ -182,7 +222,6 @@ const Comunidade = ({ navigation }) => {
         ))}
       </View>
 
-      {/* Exibindo o tópico atual */}
       <View style={styles.currentTopicContainer}>
         <Text style={styles.currentTopicText}>Você está em: {selectedTopic}</Text>
       </View>
@@ -193,6 +232,7 @@ const Comunidade = ({ navigation }) => {
         renderItem={renderItem}
         inverted
       />
+
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
           <TextInput
@@ -235,11 +275,16 @@ const Comunidade = ({ navigation }) => {
             }}>
               <Text style={[styles.modalButton, styles.reportButton]}>Denunciar</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              setModalVisible(false);
-              setReplyContent('');
-            }}>
-              <Text style={[styles.modalButton, styles.replyButton]} onPress={() => handleReplySubmit()}>Responder</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={replyContent}
+              onChangeText={setReplyContent}
+              placeholder="Responda a esta mensagem..."
+              placeholderTextColor="#888"
+              multiline
+            />
+            <TouchableOpacity onPress={handleReplySubmit} style={styles.modalSendButton}>
+              <Text style={styles.modalSendButtonText}>Enviar Resposta</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -259,30 +304,89 @@ const styles = StyleSheet.create({
     left: 20,
     zIndex: 1,
   },
+  airplaneContainer: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    alignItems: 'center',
+  },
+  airplaneIcon: {
+    zIndex: 1,
+  },
+  notificationBadge: {
+    position: 'absolute',
+    right: 0,
+    top: -5,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   topicsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 20,
-    marginTop: 70, // Deixando espaço para o botão de voltar
+    marginVertical: 90,
   },
   pill: {
     paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 50,
+    paddingHorizontal: 16,
+    borderRadius: 20,
   },
   pillText: {
     color: '#fff',
-    fontSize: 16,
     fontWeight: 'bold',
   },
   currentTopicContainer: {
     alignItems: 'center',
-    marginBottom: 10,
+    marginVertical: 10,
   },
   currentTopicText: {
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 18,
+  },
+  inputContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderColor: '#565656',
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#565656',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    color: '#fff',
+  },
+  imagePickerButton: {
+    marginLeft: 10,
+  },
+  sendButton: {
+    marginLeft: 10,
+    backgroundColor: '#0084ff',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  sendButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  selectedImage: {
+    width: 100,
+    height: 100,
+    marginTop: 10,
   },
   messageContainer: {
     flexDirection: 'row',
@@ -316,78 +420,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-    marginTop: 5,
-  },
-  inputContainer: {
-    padding: 10,
-    borderTopWidth: 1,
-    borderColor: '#444',
-    backgroundColor: '#343434',
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  input: {
-    flex: 1,
-    backgroundColor: '#444',
-    color: '#fff',
-    padding: 10,
-    borderRadius: 20,
-  },
-  sendButton: {
-    backgroundColor: '#00bfff',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    marginLeft: 10,
-  },
-  sendButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  imagePickerButton: {
-    marginLeft: 10,
-  },
-  selectedImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-  },
-  modalContent: {
-    width: '80%',
-    padding: 20,
-    backgroundColor: '#444',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalButton: {
-    fontSize: 18,
-    marginVertical: 10,
-    color: '#fff',
-  },
-  modalCloseButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-  reportButton: {
-    color: 'red',
-  },
-  replyButton: {
-    color: '#00bfff',
-  },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -395,20 +427,66 @@ const styles = StyleSheet.create({
   username: {
     fontWeight: 'bold',
     color: '#fff',
+    textDecorationLine: 'underline',
   },
   replyContainer: {
-    backgroundColor: '#555',
+    backgroundColor: '#444',
     padding: 5,
     borderRadius: 5,
-    marginTop: 5,
+    marginBottom: 5,
   },
   replyText: {
-    fontWeight: 'bold',
-    color: '#fff',
+    color: '#ccc',
+    fontSize: 12,
   },
   replyContent: {
     color: '#fff',
-    fontStyle: 'italic',
+    fontSize: 14,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalContent: {
+    backgroundColor: '#343434',
+    padding: 20,
+    borderRadius: 10,
+    marginHorizontal: 20,
+  },
+  modalCloseButton: {
+    alignSelf: 'flex-start',
+  },
+  modalButton: {
+    color: '#fff',
+    marginVertical: 10,
+  },
+  reportButton: {
+    color: 'red',
+  },
+  modalInput: {
+    backgroundColor: '#565656',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    color: '#fff',
+    marginBottom: 10,
+  },
+  modalSendButton: {
+    backgroundColor: '#0084ff',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignSelf: 'flex-end',
+  },
+  modalSendButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 

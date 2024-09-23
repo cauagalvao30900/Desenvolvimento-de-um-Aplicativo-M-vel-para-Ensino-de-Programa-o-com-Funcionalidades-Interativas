@@ -24,35 +24,12 @@ export default function HomeScreen() {
 
       <View style={styles.mainContent}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Menu de Scroll Horizontal */}
-          <ScrollView horizontal={true} style={styles.horizontalMenu} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Rct')}>
-              <Text style={styles.menuText}>React</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('exhtml')}>
-              <Text style={styles.menuText}>HTML</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Video Aulas')}>
-              <Text style={styles.menuText}>Vídeos</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('privacidade')}>
-              <Text style={styles.menuText}>Termos</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Aulas5')}>
-              <Text style={styles.menuText}>Aulas5</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Aulas6')}>
-              <Text style={styles.menuText}>Aulas6</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('privacidade')}>
-              <Text style={styles.menuText}>Termos</Text>
-            </TouchableOpacity>
-          </ScrollView>
+        
         </ScrollView>
 
         <View style={styles.bottomSection}>
           <View style={styles.topSection}>
-            <Text style={styles.welcomeText}>Continue de onde parou</Text>
+            <Text style={styles.welcomeText}>Bem vindo!</Text>
             <Text style={styles.subText}>Explore mais conteúdos que você gosta.</Text>
           </View>
 

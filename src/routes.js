@@ -62,6 +62,7 @@ import PostDetail from '../Comunidade/Postdetail';
 import RewardsScreen from '../src/pages/Perfil/RewardsScreen';
 import amigo from '../src/pages/Perfil/amigo';
 import modal from '../src/pages/Perfil/modal';
+import Direct from '../Comunidade/Direct';
 
 
 
@@ -462,6 +463,13 @@ export default function Routes() {
           component={Comunidade}
           options={{ headerShown: false }}
         />
+
+<Stack.Screen
+          name="Direct"
+          component={Direct}
+          options={{ headerShown: false }}
+        />
+
 
 
 <Stack.Screen

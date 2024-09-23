@@ -18,7 +18,7 @@ export default function ProfileScreen() {
     emailNotifications: true,
     pushNotifications: false,
   });
-  const [progress, setProgress] = useState(0); // Progress in minutes
+  const [progress, setProgress] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [rewards, setRewards] = useState([
     { id: 1, title: 'Nível 1: Novato', description: 'Usou o app por 30 minutos', time: 30 },
@@ -59,10 +59,10 @@ export default function ProfileScreen() {
   useEffect(() => {
     const start = Date.now();
     const interval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - start) / 60000); // Tempo em minutos
+      const elapsed = Math.floor((Date.now() - start) / 60000);
       setProgress(elapsed);
       checkForRewards(elapsed);
-    }, 60000); // Atualiza a cada minuto
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
@@ -73,7 +73,6 @@ export default function ProfileScreen() {
       const updatedRewards = [...userRewards, newReward.title];
       setUserRewards(updatedRewards);
 
-      // Save the new reward to the database
       const user = auth.currentUser;
       if (user) {
         await setDoc(doc(firestore, `users/${user.uid}`), { rewards: updatedRewards, progress: elapsedTime }, { merge: true });
@@ -130,7 +129,10 @@ export default function ProfileScreen() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigation.navigate('Entrar');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Entrar' }],
+      });
     } catch (error) {
       Alert.alert('Erro', 'Falha ao sair da conta. Tente novamente mais tarde.');
     }
@@ -205,7 +207,7 @@ export default function ProfileScreen() {
               <Text style={styles.rowLabel}>Política de privacidade</Text>
               <FeatherIcon color="#ffffff" name="lock" size={20} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { navigation.navigate('entrar'); }} style={styles.rowWrapper}>
+            <TouchableOpacity onPress={handleLogout} style={styles.rowWrapper}>
               <Text style={styles.rowLabel}>Sair</Text>
               <FeatherIcon color="#ffffff" name="log-out" size={20} />
             </TouchableOpacity>
@@ -249,6 +251,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 16,
+    paddingTop: 150, // Adicionado para mover o conteúdo para baixo
   },
   profileHeader: {
     flexDirection: 'row',
@@ -309,7 +312,6 @@ const styles = StyleSheet.create({
   medalIcon: {
     padding: 8,
   },
- 
   logoutButtonText: {
     color: '#ffffff',
     fontSize: 16,

@@ -1,167 +1,229 @@
-import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, View, Text, ScrollView, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
-import { Video } from 'expo-av'; 
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useRef } from 'react';
+import { View, FlatList, Dimensions, StyleSheet, Text, TouchableOpacity, Image, Alert } from 'react-native';
+import { Video } from 'expo-av';
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
 
-const videos = [
-  {
-    id: 1,
-    title: 'Título do Vídeo 1',
-    thumbnail: require('../../../assets/tech.png'),
-    channel: 'TechLearn',
-    views: '0 views',
-    uploadDate: 'Há 1 semana',
-    videoUrl: require('../../../assets/aulateste.mp4')
-  },
-  // Outros vídeos...
-];
+const { height } = Dimensions.get('window');
 
-export default function VideoScreen({ navigation }) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
+const App = ({ navigation }) => {
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [fullScreen, setFullScreen] = useState(false); 
+  const videoRef = useRef(null);
 
-  const handleVideoPress = (url) => {
-    setSelectedVideoUrl(url);
-    setModalVisible(true);
+  const videos = [
+    {
+      id: '1',
+      uri: 'https://firebasestorage.googleapis.com/v0/b/techlearn-5e347.appspot.com/o/videos%2F%2302%20-%20Sintaxe%20do%20PHP%20-%20CURSO%20PHP%20PARA%20INICIANTES.mp4?alt=media&token=8fffa1b2-20b3-4396-8d32-d72a15fe63c9',
+      title: 'Consultas SQL na Prática',
+      description: 'Nesse vídeo aprendemos a criar consultas básicas em SQL',
+      creator: 'Programação Dinâmica',
+      thumbnail: 'https://i0.wp.com/blogadvpl.com/wp-content/uploads/2015/12/sql.png?resize=640%2C267', 
+    },
+    {
+      id: '2',
+      uri: 'https://firebasestorage.googleapis.com/v0/b/techlearn-5e347.appspot.com/o/videos%2F4%20formas%20de%20LISTAR%20as%20COLUNAS%20das%20TABELAS%20no%20SQL%20Server.mp4?alt=media&token=8132ded0-a01a-4920-9252-170f8ef89042',
+      title: '4 formas de LISTAR as COLUNAS das TABELAS no SQL Server',
+      description: 'veremos 4 formas de listar as colunas das tabelas no SQL Server!',
+      creator: 'DBA PRO',
+      thumbnail: 'https://i.ytimg.com/vi/dz-SqbnkRLA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAlOVxvOcfRIU_0BSibs6XwlRA03g', 
+    },
+    {
+      id: '3',
+      uri: 'https://firebasestorage.googleapis.com/v0/b/techlearn-5e347.appspot.com/o/videos%2FSQL%20SERVER%20-%20DELETE%20-%204%20formas%20de%20apagar%20%20dados%20das%20tabelas.mp4?alt=media&token=8d407d97-682a-4c35-951f-0458ad907f2d',
+      title: 'SQL SERVER - DELETE - 4 formas de apagar dados das tabelas',
+      description: 'Como adicionamos uma imagem no nosso html, para isso utilizamos a tag img',
+      creator: 'Adilson Paranhos',
+      thumbnail: 'https://i.ytimg.com/vi/s-VOXTNibY0/sddefault.jpg', 
+    },
+ 
+  ];
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      videoRef.current.pauseAsync();
+    } else {
+      videoRef.current.playAsync();
+    }
+    setIsPlaying(!isPlaying);
   };
 
-  const handleBackPress = () => {
-    setModalVisible(false);
+  const handleVideoChange = (index) => {
+    setCurrentVideoIndex(index);
+    setIsPlaying(true);
+    if (fullScreen) {
+      videoRef.current.dismissFullscreenPlayer(); 
+      setFullScreen(false);
+    }
   };
+
+  const toggleFullScreen = () => {
+    if (fullScreen) {
+      videoRef.current.dismissFullscreenPlayer();
+    } else {
+      videoRef.current.presentFullscreenPlayer();
+    }
+    setFullScreen(!fullScreen);
+  };
+
+  const handleShare = () => {
+    const currentVideo = videos[currentVideoIndex];
+    Alert.alert(
+      'Canal Amigo',
+      `Vídeo tirado do canal: ${currentVideo.creator}`,
+      [{ text: 'OK', onPress: () => console.log('Canal divulgado') }]
+    );
+  };
+
+  const renderItem = ({ item, index }) => (
+    <TouchableOpacity style={styles.videoItem} onPress={() => handleVideoChange(index)}>
+      <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
+      <View>
+        <Text style={styles.videoTitle}>{item.title}</Text>
+        <Text style={styles.videoDescription}>{item.description}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-          <MaterialIcons name="arrow-back" size={30} color="#FFF" />
-        </Pressable>
-        <Text style={styles.headerText}>Aulas de SQL</Text>
+    <View style={styles.container}>
+      {/* Botão de voltar */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={30} color="#fff" />
+      </TouchableOpacity>
+
+      {/* Container do vídeo */}
+      <TouchableOpacity style={styles.videoContainer} onPress={togglePlayPause}>
+        <Video
+          ref={videoRef}
+          source={{ uri: videos[currentVideoIndex].uri }}
+          style={styles.video}
+          shouldPlay={isPlaying}
+          resizeMode="contain"
+        />
+        {/* Botão de tela cheia no canto inferior direito */}
+        <TouchableOpacity style={styles.fullScreenButton} onPress={toggleFullScreen}>
+          <Ionicons name={fullScreen ? 'contract' : 'expand'} size={30} color="#fff" />
+        </TouchableOpacity>
+      </TouchableOpacity>
+
+      {/* Informações do vídeo */}
+      <View style={styles.overlay}>
+        <Text style={styles.title}>{videos[currentVideoIndex].title}</Text>
+        <Text style={styles.description}>{videos[currentVideoIndex].description}</Text>
+        <Text style={styles.creator}>Canal: {videos[currentVideoIndex].creator}</Text>
+
+        {/* Botão de divulgar */}
+        <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+          <Text style={styles.shareButtonText}>Acessar canal</Text>
+        </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {videos.map((video) => (
-          <TouchableOpacity 
-            key={video.id} 
-            style={styles.videoContainer} 
-            onPress={() => handleVideoPress(video.videoUrl)}
-            activeOpacity={0.7} 
-          >
-            <Image source={video.thumbnail} style={styles.thumbnail} />
-            <View style={styles.videoInfo}>
-              <Text style={styles.title}>{video.title}</Text>
-              <Text style={styles.channel}>{video.channel}</Text>
-              <Text style={styles.videoDetails}>{`${video.views} • ${video.uploadDate}`}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        onRequestClose={handleBackPress}
-        animationType="slide"
-      >
-        <View style={styles.modalContainer}>
-          <Pressable style={styles.backButtonModal} onPress={handleBackPress}>
-            <MaterialIcons name="arrow-back" size={30} color="#FFF" />
-          </Pressable>
-          <Video
-            source={selectedVideoUrl}
-            style={styles.videoPlayer}
-            useNativeControls
-            resizeMode="contain"
-            isLooping
-          />
-        </View>
-      </Modal>
-    </SafeAreaView>
+
+      {/* Lista de vídeos relacionados */}
+      <Text style={styles.relatedTitle}>Vídeos relacionados</Text>
+      <FlatList
+        data={videos}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        style={styles.videoList}
+        horizontal={false} // Faz com que a lista seja rolável verticalmente
+      />
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#363636',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 20,
-    backgroundColor: '#222',
-    borderBottomWidth: 1,
-    borderBottomColor: '#555',
-    paddingTop: 40,
-  },
   backButton: {
-    marginLeft: 10,
-    padding: 5,
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFF',
-    flex: 1,  
-    textAlign: 'center',  
-    marginRight: 40,  
-  },
-  scrollViewContent: {
-    paddingHorizontal: 15,
-    paddingBottom: 20,
+    position: 'absolute',
+    top: 40,
+    left: 10,
+    zIndex: 10, // Garante que o botão de voltar fique por cima de outros elementos
   },
   videoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#333',
-    borderRadius: 10,
-    marginBottom: 15,
+    width: '100%',
+    height: height * 0.45, // Ajuste da altura para dar espaço à lista de vídeos
+  },
+  video: {
+    width: '100%',
+    height: '140%',
+  },
+  fullScreenButton: {
+    position: 'absolute',
+    bottom: -0, // Coloca o botão no canto inferior
+    right: 10,  // Coloca o botão à direita
+    zIndex: 10, // Mantém o botão por cima do vídeo
+    padding: 5, // Ajuste o padding conforme necessário
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo levemente transparente para maior visibilidade
+    borderRadius: 5,
+  },
+  overlay: {
     padding: 10,
-    borderWidth: 1,
-    borderColor: '#555',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  thumbnail: {
-    width: 120,
-    height: 80,
-    borderRadius: 6,
-    marginRight: 10,
-  },
-  videoInfo: {
-    flex: 1,
   },
   title: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  description: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 5,
+  },
+  creator: {
+    color: '#00ffff',
+    fontSize: 14,
+    marginTop: 10,
+    fontStyle: 'italic',
+  },
+  shareButton: {
+    backgroundColor: 'gray',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  shareButtonText: {
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FFF',
   },
-  channel: {
-    color: '#AAA',
-    fontSize: 14,
+  relatedTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+    marginTop: 10,
   },
-  videoDetails: {
-    color: '#777',
+  videoList: {
+    flex: 1,
+  },
+  videoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#565656',
+    marginBottom: 20, // Maior espaçamento entre os itens
+    borderRadius: 5,
+  },
+  thumbnail: {
+    width: 100,
+    height: 60,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  videoTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  videoDescription: {
+    color: '#fff',
     fontSize: 12,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    paddingTop: 80,  
-  },
-  videoPlayer: {
-    width: '90%',
-    height: '70%',
-  },
-  backButtonModal: {
-    position: 'absolute',
-    top: 60,
-    left: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 25,
-    padding: 10,
-    zIndex: 1,
-  },
 });
+
+export default App;

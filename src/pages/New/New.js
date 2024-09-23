@@ -119,7 +119,9 @@ export default function Example() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    flexGrow: 1,
+    padding: 16,
+    paddingTop: 150, // Adicionado para mover o conteúdo para baixo
   },
   title: {
     fontSize: 22,
