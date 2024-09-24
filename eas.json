@@ -1,15 +1,17 @@
 {
+  "cli": {
+    "version": ">= 0.38.0",
+    "appVersionSource": "remote"
+  },
   "build": {
-    "preview": {
-      "android": {
-        "buildType": "app-bundle",
-        "releaseChannel": "preview"
-      }
-    },
     "production": {
       "android": {
-        "buildType": "app-bundle",
-        "releaseChannel": "production"
+        "buildType": "apk"
+      }
+    },
+    "release": {
+      "android": {
+        "buildType": "apk"
       }
     }
   }

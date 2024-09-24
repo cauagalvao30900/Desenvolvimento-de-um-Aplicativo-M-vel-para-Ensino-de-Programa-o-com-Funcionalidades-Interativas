@@ -18,6 +18,13 @@
       "permissions": [
         "INTERNET"
       ]
-    }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/9d80ebdc-5c5e-4b77-bbbb-e22198a2e555"
+    },
+    "ios": {}
   }
 }
