@@ -40,10 +40,10 @@ export default function Example({ navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <FeatherIcon name="arrow-left" size={24} color="white" />
-      </TouchableOpacity>
+  style={[styles.backButton, styles.circularButton]}
+  onPress={() => navigation.goBack()}>
+  <FeatherIcon name="arrow-left" size={24} color="white" />
+</TouchableOpacity>
       <Animated.View
         style={[
           styles.backgroundImage,
@@ -90,7 +90,7 @@ export default function Example({ navigation }) {
                   <Text style={styles.cardTitle}>{name}</Text>
                 </View>
                 <View style={styles.cardAction}>
-                  <FeatherIcon color="#fff" name="book-open" size={20} />
+                  <FeatherIcon color="#000000" name="book-open" size={20} />
                 </View>
               </TouchableOpacity>
             ))}
@@ -114,6 +114,16 @@ const styles = StyleSheet.create({
     height: 400,
     zIndex: 1,
   },
+
+  circularButton: {
+    width: 48,         // Ajuste para o tamanho desejado do círculo
+    height: 48,        // Deve ser igual à largura para manter o formato circular
+    borderRadius: 24,  // Metade do tamanho para ficar um círculo perfeito
+    backgroundColor: 'black', // Cor de fundo do círculo
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
   backdrop: {
     width: '100%',
     height: '100%',
@@ -210,4 +220,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#ffffff',
   },
+  
 });

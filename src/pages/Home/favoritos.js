@@ -116,87 +116,116 @@
           
             const keyExtractor = (item) => item.id.toString();
           
-            return (
-              <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                  <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={24} color="white" />
-                  </TouchableOpacity>
-                  <View style={styles.searchContainer}>
-                    <TextInput
-                      style={styles.searchBar}
-                      placeholder="Buscar favoritos..."
-                      placeholderTextColor="#999"
-                      value={searchQuery}
-                      onChangeText={handleSearch}
-                    />
+       
+      
+            
+         
+            
+              return (
+                <SafeAreaView style={styles.container}>
+                  <View style={styles.header}>
+                    {/* Botão de voltar com a flexinha */}
+                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                      <Ionicons name="arrow-back" size={24} color="white" />
+                    </TouchableOpacity>
+                    {/* Barra de pesquisa */}
+                    <View style={styles.searchContainer}>
+                      <TextInput
+                        style={styles.searchBar}
+                        placeholder="Buscar favoritos..."
+                        placeholderTextColor="#999"
+                        value={searchQuery}
+                        onChangeText={handleSearch}
+                      />
+                      <Ionicons
+                        name="search"
+                        size={20}
+                        color="#999"
+                        style={styles.searchIcon}
+                      />
+                    </View>
                   </View>
-                </View>
-                {filteredFavorites.length > 0 ? (
-                  <FlatList
-                    data={filteredFavorites}
-                    renderItem={renderItem}
-                    keyExtractor={keyExtractor}
-                  />
-                ) : (
-                  <Text style={styles.emptyMessage}>Nenhum favorito encontrado.</Text>
-                )}
-              </SafeAreaView>
-            );
-          };
-          
-          const styles = StyleSheet.create({
-            container: {
-              flex: 1,
-              backgroundColor: '#343434',
-              paddingHorizontal: 20,
-              paddingTop: 20,
-            },
-            header: {
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: 20,
-            },
-            backButton: {
-              marginRight: 10,
-            },
-            searchContainer: {
-              flex: 1,
-              borderRadius: 20,
-              borderWidth: 2,
-              borderColor: '#00ffff',
-            },
-            searchBar: {
-              height: 40,
-              backgroundColor: '#1e1e1e',
-              color: 'white',
-              borderRadius: 20,
-              paddingHorizontal: 10,
-            },
-            itemContainer: {
-              marginBottom: 10,
-              padding: 20,
-              backgroundColor: '#1e1e1e',
-              borderRadius: 10,
-            },
-            title: {
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: 'white',
-            },
-            code: {
-              fontSize: 14,
-              marginTop: 10,
-              color: 'white',
-              fontFamily: 'monospace',
-            },
-            emptyMessage: {
-              fontSize: 16,
-              color: '#999',
-              textAlign: 'center',
-              marginTop: 20,
-            },
-          });
-          
-          export default FavoriteScreen;
-          
+                  {filteredFavorites.length > 0 ? (
+                    <FlatList
+                      data={filteredFavorites}
+                      renderItem={renderItem}
+                      keyExtractor={keyExtractor}
+                    />
+                  ) : (
+                    <Text style={styles.emptyMessage}>Nenhum favorito encontrado.</Text>
+                  )}
+                </SafeAreaView>
+              );
+            };
+       
+            
+            const styles = StyleSheet.create({
+              container: {
+                flex: 1,
+                backgroundColor: '#343434',
+                paddingHorizontal: 10, // Ajustado para não ser muito largo
+                paddingTop: 70,
+                alignItems: 'center',  // Centraliza os elementos horizontalmente
+              },
+              header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center', // Centraliza o conteúdo no eixo horizontal
+                marginBottom: 40,
+                width: '100%',  // Faz com que o cabeçalho ocupe toda a largura disponível
+              },
+              backButton: {
+                marginRight: 30,  // Ajuste o espaço entre o ícone de voltar e a barra de pesquisa
+              },
+              searchContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderRadius: 40,
+                borderWidth: 3,
+                borderColor: '#00ffff',
+                width: '80%', // Barra de pesquisa ocupa 80% da largura disponível
+                position: 'relative',
+                paddingLeft: 20,  // Adiciona padding para dar espaço ao ícone
+              },
+              searchBar: {
+                height: 40,
+                backgroundColor: '#1e1e1e',
+                color: 'white',
+                borderRadius: 20,
+                flex: 1, // Faz com que a barra de pesquisa ocupe o restante do espaço disponível
+                paddingLeft: 20, // Espaço adicional à esquerda para o ícone
+              },
+              searchIcon: {
+                position: 'absolute',
+                left: 10,  // Posição do ícone dentro da busca
+              },
+              itemContainer: {
+                marginBottom: 10,
+                padding: 20,
+                backgroundColor: '#1e1e1e',
+                borderRadius: 10,
+                width: '100%',  // Ocupa toda a largura
+              },
+              title: {
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: 'white',
+              },
+              code: {
+                fontSize: 14,
+                marginTop: 10,
+                color: 'white',
+                fontFamily: 'monospace',
+              },
+              emptyMessage: {
+                fontSize: 16,
+                color: '#999',
+                textAlign: 'center',
+                marginTop: 20,
+              },
+            });
+            
+            export default FavoriteScreen;
+            
+            
+            

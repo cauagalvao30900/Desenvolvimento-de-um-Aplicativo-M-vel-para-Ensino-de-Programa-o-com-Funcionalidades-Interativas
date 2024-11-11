@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 function App() {
   const navigation = useNavigation();
-  
+
   const exercises = [
     {
       id: 1,
@@ -49,6 +50,7 @@ function App() {
   const [feedback, setFeedback] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
+  const [errorCount, setErrorCount] = useState(0); // Estado para contar os erros consecutivos
 
   const checkAnswer = (answer) => {
     const correctAnswer = exercises[currentExerciseIndex].correctAnswer;
@@ -56,10 +58,15 @@ function App() {
     if (answer === correctAnswer) {
       setIsCorrect(true);
       setFeedback('Resposta correta!');
-      setTimeout(nextExercise, 1000); // Avança após 2 segundos
+      setErrorCount(0); // Reseta a contagem de erros
+      setTimeout(nextExercise, 1000); // Avança após 1 segundo
     } else {
       setIsCorrect(false);
       setFeedback('Resposta incorreta. Tente novamente.');
+      setErrorCount(prev => prev + 1); // Incrementa a contagem de erros
+      if (errorCount + 1 === 3) {
+        resetExercises(); // Reseta os exercícios após 3 erros consecutivos
+      }
     }
   };
 
@@ -78,6 +85,13 @@ function App() {
     setIsCorrect(false);
   };
 
+  const resetExercises = () => {
+    setCurrentExerciseIndex(0);
+    setErrorCount(0);
+    resetFeedback();
+    setFeedback('Você errou 3 vezes seguidas. Voltando ao início.');
+  };
+
   const navigateToHome = () => {
     navigation.navigate('Code');
   };
@@ -85,9 +99,11 @@ function App() {
   if (showCongrats) {
     return (
       <View style={styles.congratsContainer}>
-        <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
-          <Icon name="arrow-back" size={30} color="#fff" />
-        </TouchableOpacity>
+        <TouchableOpacity
+  style={[styles.backButton, styles.circularButton]}
+  onPress={() => navigation.goBack()}>
+  <FeatherIcon name="arrow-left" size={24} color="white" />
+</TouchableOpacity>
         <Text style={styles.congratsText}>Parabéns! Você concluiu todos os exercícios!</Text>
         <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
           <Text style={styles.homeButtonText}>Voltar para Home</Text>
@@ -101,7 +117,7 @@ function App() {
       <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
         <Icon name="arrow-back" size={30} color="#fff" />
       </TouchableOpacity>
-      <Text style={styles.header}>Exercícios de React</Text>
+      <Text style={styles.header}>Exercícios de PHP</Text>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.exerciseContainer}>
           <Text style={styles.exerciseTitle}>{exercises[currentExerciseIndex].title}</Text>
@@ -218,6 +234,14 @@ const styles = StyleSheet.create({
     color: '#00ff00',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  circularButton: {
+    width: 48,         // Ajuste para o tamanho desejado do círculo
+    height: 48,        // Deve ser igual à largura para manter o formato circular
+    borderRadius: 24,  // Metade do tamanho para ficar um círculo perfeito
+    backgroundColor: 'black', // Cor de fundo do círculo
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 function App() {
   const navigation = useNavigation();
@@ -81,7 +82,7 @@ function App() {
     if (answer === correctAnswer) {
       setIsCorrect(true);
       setFeedback('Resposta correta!');
-      setTimeout(nextExercise, 1000); // Avança após 2 segundos
+      setTimeout(nextExercise, 1000); // Avança após 1 segundo
     } else {
       setIsCorrect(false);
       setFeedback('Resposta incorreta. Tente novamente.');
@@ -123,9 +124,11 @@ function App() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
-        <Icon name="arrow-back" size={30} color="#fff" />
-      </TouchableOpacity>
+     <TouchableOpacity
+  style={[styles.backButton, styles.circularButton]}
+  onPress={() => navigation.goBack()}>
+  <FeatherIcon name="arrow-left" size={24} color="white" />
+</TouchableOpacity>
       <Text style={styles.header}>Exercícios de React</Text>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.exerciseContainer}>
@@ -243,6 +246,14 @@ const styles = StyleSheet.create({
     color: '#00ff00',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  circularButton: {
+    width: 48,         // Ajuste para o tamanho desejado do círculo
+    height: 48,        // Deve ser igual à largura para manter o formato circular
+    borderRadius: 24,  // Metade do tamanho para ficar um círculo perfeito
+    backgroundColor: 'black', // Cor de fundo do círculo
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

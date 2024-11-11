@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
 function App() {
@@ -10,62 +10,62 @@ function App() {
     {
       id: 1,
       title: "Exercício 1",
-      question: "Qual tag é usada para definir um parágrafo em HTML?",
+      question: "Qual comando SQL é usado para selecionar dados de um banco de dados?",
       options: [
-        "a) <p>",
-        "b) <para>",
-        "c) <paragraph>",
-        "d) <text>"
+        "a) SELECT",
+        "b) GET",
+        "c) OPEN",
+        "d) RETRIEVE"
       ],
       correctAnswer: "a"
     },
     {
       id: 2,
       title: "Exercício 2",
-      question: "Como você cria um link em HTML?",
+      question: "Como você seleciona todas as colunas de uma tabela chamada 'clientes'?",
       options: [
-        "a) <a href='URL'>Texto</a>",
-        "b) <link href='URL'>Texto</link>",
-        "c) <url href='URL'>Texto</url>",
-        "d) <hyperlink href='URL'>Texto</hyperlink>"
+        "a) SELECT * FROM clientes;",
+        "b) SELECT all FROM clientes;",
+        "c) SELECT clientes;",
+        "d) SELECT FROM clientes;"
       ],
       correctAnswer: "a"
     },
     {
       id: 3,
       title: "Exercício 3",
-      question: "Qual tag é usada para incluir uma imagem em HTML?",
+      question: "Qual comando SQL é usado para atualizar dados em um banco de dados?",
       options: [
-        "a) <img src='URL' />",
-        "b) <image src='URL' />",
-        "c) <picture src='URL' />",
-        "d) <src='URL' />"
+        "a) MODIFY",
+        "b) SAVE",
+        "c) UPDATE",
+        "d) CHANGE"
       ],
-      correctAnswer: "a"
+      correctAnswer: "c"
     },
     {
       id: 4,
       title: "Exercício 4",
-      question: "Qual tag é usada para criar uma lista ordenada em HTML?",
+      question: "Como você adiciona uma condição para selecionar apenas os clientes com idade maior que 30?",
       options: [
-        "a) <ol>",
-        "b) <ul>",
-        "c) <list>",
-        "d) <dl>"
+        "a) SELECT * FROM clientes WHERE idade > 30;",
+        "b) SELECT * FROM clientes HAVING idade > 30;",
+        "c) SELECT * FROM clientes WHICH idade > 30;",
+        "d) SELECT * FROM clientes FOR idade > 30;"
       ],
       correctAnswer: "a"
     },
     {
       id: 5,
       title: "Exercício 5",
-      question: "Como você define um título de nível 1 em HTML?",
+      question: "Qual comando SQL é usado para deletar registros de um banco de dados?",
       options: [
-        "a) <h1>",
-        "b) <title>",
-        "c) <header>",
-        "d) <head>"
+        "a) REMOVE",
+        "b) DELETE",
+        "c) DROP",
+        "d) CLEAR"
       ],
-      correctAnswer: "a"
+      correctAnswer: "b"
     }
   ];
 
@@ -74,6 +74,7 @@ function App() {
   const [feedback, setFeedback] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
+  const [errorCount, setErrorCount] = useState(0); // Estado para contar os erros
 
   const checkAnswer = (answer) => {
     const correctAnswer = exercises[currentExerciseIndex].correctAnswer;
@@ -81,10 +82,20 @@ function App() {
     if (answer === correctAnswer) {
       setIsCorrect(true);
       setFeedback('Resposta correta!');
-      setTimeout(nextExercise, 1000); // Avança após 2 segundos
+      setErrorCount(0); // Reseta contagem de erros ao acertar
+      setTimeout(nextExercise, 1000); // Avança após 1 segundo
     } else {
       setIsCorrect(false);
       setFeedback('Resposta incorreta. Tente novamente.');
+      setErrorCount(errorCount + 1); // Incrementa contagem de erros
+      if (errorCount + 1 >= 3) {
+        setFeedback('Você errou 3 vezes! Voltando ao primeiro exercício.');
+        setTimeout(() => {
+          setCurrentExerciseIndex(0); // Volta ao primeiro exercício
+          setErrorCount(0); // Reseta contagem de erros
+          resetFeedback();
+        }, 1500); // Tempo para exibir o feedback
+      }
     }
   };
 
@@ -111,7 +122,7 @@ function App() {
     return (
       <View style={styles.congratsContainer}>
         <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
-          <Icon name="arrow-back" size={30} color="#fff" />
+          <FeatherIcon name="arrow-left" size={30} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.congratsText}>Parabéns! Você concluiu todos os exercícios!</Text>
         <TouchableOpacity style={styles.homeButton} onPress={navigateToHome}>
@@ -123,10 +134,12 @@ function App() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
-        <Icon name="arrow-back" size={30} color="#fff" />
+      <TouchableOpacity
+        style={[styles.backButton, styles.circularButton]}
+        onPress={() => navigation.goBack()}>
+        <FeatherIcon name="arrow-left" size={24} color="white" />
       </TouchableOpacity>
-      <Text style={styles.header}>Exercícios de React</Text>
+      <Text style={styles.header}>Exercícios de HTML</Text>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.exerciseContainer}>
           <Text style={styles.exerciseTitle}>{exercises[currentExerciseIndex].title}</Text>
@@ -138,8 +151,7 @@ function App() {
                 styles.optionButton,
                 selectedAnswer === option.charAt(0) && (isCorrect ? styles.correctOption : styles.incorrectOption)
               ]}
-              onPress={() => checkAnswer(option.charAt(0))}
-            >
+              onPress={() => checkAnswer(option.charAt(0))}>
               <Text style={styles.optionText}>{option}</Text>
             </TouchableOpacity>
           ))}
@@ -243,6 +255,14 @@ const styles = StyleSheet.create({
     color: '#00ff00',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  circularButton: {
+    width: 48,         // Ajuste para o tamanho desejado do círculo
+    height: 48,        // Deve ser igual à largura para manter o formato circular
+    borderRadius: 24,  // Metade do tamanho para ficar um círculo perfeito
+    backgroundColor: 'black', // Cor de fundo do círculo
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

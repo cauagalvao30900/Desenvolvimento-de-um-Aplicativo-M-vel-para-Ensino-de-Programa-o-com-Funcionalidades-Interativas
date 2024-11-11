@@ -11,6 +11,10 @@ const updates = [
   { id: '4', title: 'Melhorias no Layout da Página de Aulas', date: '2024-07-25', description: 'Ajustado o layout para melhor compatibilidade com dispositivos móveis.' },
   { id: '5', title: 'Atualização do Design do Menu', date: '2024-06-30', description: 'Atualizado o design do menu para uma interface mais intuitiva.' },
   { id: '6', title: 'Adição de Aba Comunidade e Video Aulas', date: '2024-08-25', description: 'Foi adicionada uma nova aba para comunidade e uma seção de video aulas no app.' },
+  { id: '7', title: 'Atualização do Design do Menu de Configurações', date: '2024-11-10', description: 'O design do menu de configurações foi melhorado para maior facilidade de navegação.' },
+  { id: '8', title: 'Correção de Problemas na Exibição de Notificações', date: '2024-11-05', description: 'Corrigidos erros que impediam a exibição adequada das notificações no app.' },
+  { id: '9', title: 'Melhorias no Desempenho do Aplicativo', date: '2024-10-30', description: 'O desempenho do aplicativo foi otimizado, resultando em uma navegação mais fluida.' },
+  { id: '10', title: 'Atualização de Segurança no Login', date: '2024-10-15', description: 'A segurança do login foi aprimorada com criptografia adicional.' },
   // Adicione mais atualizações conforme necessário
 ];
 
@@ -53,6 +57,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1b1d1b',
+    padding: '70',
   },
   header: {
     padding: 20,

@@ -197,7 +197,7 @@ export default function ProfileScreen() {
           <View style={styles.sectionBody}>
             <TouchableOpacity onPress={() => { navigation.navigate('Contatar'); }} style={styles.rowWrapper}>
               <Text style={styles.rowLabel}>Contatar-nos</Text>
-              <FeatherIcon color="#ffffff" name="mail" size={20} />
+              <FeatherIcon color="#0000ff" name="mail" size={20} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { navigation.navigate('relatarerro'); }} style={styles.rowWrapper}>
               <Text style={styles.rowLabel}>Reportar erro</Text>
@@ -205,7 +205,7 @@ export default function ProfileScreen() {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { navigation.navigate('privacidade'); }} style={styles.rowWrapper}>
               <Text style={styles.rowLabel}>Política de privacidade</Text>
-              <FeatherIcon color="#ffffff" name="lock" size={20} />
+              <FeatherIcon color="#ffff00" name="lock" size={20} />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleLogout} style={styles.rowWrapper}>
               <Text style={styles.rowLabel}>Sair</Text>
