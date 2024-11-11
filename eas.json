@@ -3,10 +3,20 @@
     "version": ">= 0.48.0",
     "appVersionSource": "remote"
   },
+  "update": {
+    "branches": {
+      "master": {}
+    }
+  },
   "build": {
-    "production": {
-      "android": {
-        "buildType": "apk"
+    "android": {
+      "production": {
+        "buildType": "aab", 
+        "gradleCommand": ":app:assembleRelease",  
+        "releaseChannel": "default", 
+        "env": {
+          "EXPO_ANDROID_KEYSTORE": "true"  
+        }
       }
     }
   }
