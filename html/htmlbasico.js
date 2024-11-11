@@ -29,11 +29,12 @@ export default function Example({ navigation }) {
 
   return (
     <View style={styles.container}>
-    <TouchableOpacity
-  style={[styles.backButton, styles.circularButton]}
-  onPress={() => navigation.goBack()}>
-  <FeatherIcon name="arrow-left" size={24} color="white" />
-</TouchableOpacity>
+      {/* Botão circular de volta */}
+      <TouchableOpacity
+        style={[styles.backButton, styles.circularButton]}
+        onPress={() => navigation.goBack()}>
+        <FeatherIcon name="arrow-left" size={24} color="white" />
+      </TouchableOpacity>
 
       <Animated.View
         style={[
@@ -51,6 +52,7 @@ export default function Example({ navigation }) {
           source={{ uri: 'https://img.freepik.com/vetores-gratis/programacao-html5-desenvolvimento-de-sites-da-internet-engenharia-de-aplicativos-da-web-escrita-de-scripts-otimizacao-de-codigo-html-programador-corrigindo-bugs_335657-2678.jpg' }}
         />
       </Animated.View>
+
       <ScrollView
         style={styles.scrollView}
         onScroll={Animated.event(
@@ -63,6 +65,7 @@ export default function Example({ navigation }) {
             Estamos prestes a mergulhar no universo do HyperText Markup Language (HTML). Nesta parte do curso, vamos explorar os fundamentos essenciais para criar páginas da web, entender a estrutura básica do HTML e aprender a criar conteúdo web interativo e acessível.
           </Text>
         </View>
+
         <View style={styles.lessonsOverlay}>
           <View style={styles.lessons}>
             <Text style={styles.lessonsTitle}>Básico</Text>
@@ -76,7 +79,7 @@ export default function Example({ navigation }) {
                   <Text style={styles.cardTitle}>{name}</Text>
                 </View>
                 <View style={styles.cardAction}>
-                  <FeatherIcon color="#000000" name="book-open" size={20} />
+                  <FeatherIcon color="#fff" name="book-open" size={20} />
                 </View>
               </TouchableOpacity>
             ))}
@@ -108,8 +111,6 @@ const styles = StyleSheet.create({
     flex: 1,
     zIndex: 2,
   },
-
-
   circularButton: {
     width: 48,         // Ajuste para o tamanho desejado do círculo
     height: 48,        // Deve ser igual à largura para manter o formato circular
@@ -207,4 +208,3 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-

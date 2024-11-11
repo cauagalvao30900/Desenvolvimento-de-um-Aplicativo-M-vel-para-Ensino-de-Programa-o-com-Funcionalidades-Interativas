@@ -200,9 +200,9 @@ const Comunidade = ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.airplaneContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate('Direct')} style={styles.airplaneIcon}>
-  <Icon name="chat-bubble" size={30} color="#fff" />
-</TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Direct')} style={styles.airplaneIcon}>
+          <Icon name="send" size={30} color="#fff" />
+        </TouchableOpacity>
         {/* {unreadReplies > 0 && (
           <View style={styles.notificationBadge}>
             <Text style={styles.badgeText}>{unreadReplies}</Text>

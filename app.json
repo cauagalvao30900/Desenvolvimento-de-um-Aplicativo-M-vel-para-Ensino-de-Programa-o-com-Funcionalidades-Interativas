@@ -4,6 +4,23 @@
     "slug": "tcc24",
     "version": "1.0.0",
     "icon": "./assets/tech.png",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.euc4u4.tcc24"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/tech.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.euc4u4.tcc24",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET"
+      ]
+    },
     "web": {
       "favicon": "./assets/tech.png"
     },
@@ -12,19 +29,11 @@
         "projectId": "9d80ebdc-5c5e-4b77-bbbb-e22198a2e555"
       }
     },
-    "android": {
-      "package": "com.euc4u4.tcc24",
-      "versionCode": 1,
-      "permissions": [
-        "INTERNET"
-      ]
-    },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/9d80ebdc-5c5e-4b77-bbbb-e22198a2e555"
-    },
-    "ios": {}
+    }
   }
 }
