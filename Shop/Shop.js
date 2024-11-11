@@ -10,7 +10,7 @@ const categories = [
 ];
 
 const products = [
-  { id: 1, categoryId: 1, name: 'RTX 3080', price: 1499, image: 'https://example.com/rtx3080.jpg', url: 'https://www.example.com/product/rtx3080' },
+  { id: 1, categoryId: 1, name: 'RTX 300', price: 1499, image: 'https://example.com/rtx3080.jpg', url: 'https://www.example.com/product/rtx3080' },
   { id: 2, categoryId: 1, name: 'RX 6800 XT', price: 1299, image: 'https://example.com/rx6800xt.jpg', url: 'https://www.example.com/product/rx6800xt' },
   { id: 3, categoryId: 2, name: 'Intel Core i9-11900K', price: 599, image: 'https://example.com/i9.jpg', url: 'https://www.example.com/product/i9' },
   { id: 4, categoryId: 2, name: 'AMD Ryzen 9 5950X', price: 749, image: 'https://example.com/ryzen9.jpg', url: 'https://www.example.com/product/ryzen9' },
